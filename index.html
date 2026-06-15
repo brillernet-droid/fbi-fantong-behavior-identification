@@ -3,11 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>饭桶研究所 | FBI 饭桶行为识别系统</title>
+    <title>饭桶研究所 | 中国饭点行为识别小测试</title>
     <meta
       name="description"
-      content="饭桶研究所出品的 FBI 饭桶行为识别系统，FBI = FanTong Behavior Identification。"
+      content="饭桶研究所出品的 FBI 饭桶行为识别系统，识别早八、外卖满减、拼单、夜宵和选择困难等中国饭点行为。"
     />
+    <meta name="theme-color" content="#d94d32" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="饭桶研究所 | FBI 饭桶行为识别系统" />
+    <meta
+      property="og:description"
+      content="测测你的早八、外卖满减、拼单、夜宵和干饭行为，会被饭桶研究所识别成哪一型。"
+    />
+    <meta property="og:image" content="./assets/fantong-lab-hero.png" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -21,9 +30,9 @@
           </span>
         </a>
         <nav class="topnav" aria-label="主导航">
-          <a href="#home">识别系统</a>
+          <a href="#home">开测</a>
           <a href="#archive">16 型档案</a>
-          <a href="#lab-note">研究备注</a>
+          <a href="#lab-note">避嫌说明</a>
         </nav>
       </header>
 
@@ -36,10 +45,10 @@
           />
           <div class="hero-overlay" aria-hidden="true"></div>
           <div class="hero-content">
-            <p class="eyebrow">饭桶研究所 · 内部行为观察组</p>
+            <p class="eyebrow">饭桶研究所 · 中国饭点样本组</p>
             <h1>FBI 饭桶行为识别系统</h1>
             <p class="hero-copy">
-              FBI = FanTong Behavior Identification。一个只研究饭点、选择困难和突然很饿的虚构系统。
+              从早八豆浆到下班外卖，从满减纠结到夜宵复活。FBI = FanTong Behavior Identification。
             </p>
             <div class="hero-actions" aria-label="首页操作">
               <button class="btn btn-primary" id="startTest" type="button">启动 FBI 识别</button>
@@ -56,14 +65,14 @@
           <div class="section-wrap">
             <div class="screen-heading">
               <p class="eyebrow">FBI 饭桶行为识别系统</p>
-              <h2>样本采集</h2>
-              <p>当前系统只采集饭点行为，不采集真实身份。</p>
+              <h2>本土样本采集</h2>
+              <p>当前系统只采集饭点行为，不采集真实身份；早八、拼单、满减和夜宵行为会被重点观察。</p>
             </div>
 
             <div class="quiz-layout">
               <aside class="sample-panel" aria-label="识别对象输入">
                 <label for="subjectName">识别对象</label>
-                <input id="subjectName" name="subjectName" type="text" maxlength="18" placeholder="例如：今天很饿的我" />
+                <input id="subjectName" name="subjectName" type="text" maxlength="18" placeholder="例如：早八干饭人" />
                 <div class="sample-meter" aria-hidden="true">
                   <span></span>
                   <span></span>
@@ -71,7 +80,7 @@
                   <span></span>
                   <span></span>
                 </div>
-                <p class="sample-status" id="sampleStatus">饭点信号待校准</p>
+                <p class="sample-status" id="sampleStatus">本土饭点信号待校准</p>
               </aside>
 
               <div class="question-panel" aria-live="polite">
@@ -101,7 +110,7 @@
                   <p class="eyebrow">FanTong Behavior Identification</p>
                   <h2 id="reportTitle">【FBI 饭桶行为识别报告】</h2>
                 </div>
-                <span class="report-stamp">内部玩梗样本</span>
+                <span class="report-stamp">本土玩梗样本</span>
               </div>
 
               <dl class="report-fields" id="reportFields"></dl>
@@ -110,7 +119,7 @@
 
             <div class="result-actions">
               <button class="btn btn-primary" id="restartBtn" type="button">重新识别</button>
-              <button class="btn btn-secondary" id="mealFromResult" type="button">决定一顿补充摄入</button>
+              <button class="btn btn-secondary" id="mealFromResult" type="button">决定今晚吃啥</button>
               <a class="btn btn-link" href="#archive">查看 16 型档案</a>
             </div>
           </div>
@@ -129,7 +138,7 @@
         <section class="lab-note" id="lab-note">
           <div class="section-wrap note-wrap">
             <div>
-              <p class="eyebrow">研究所备注</p>
+              <p class="eyebrow">研究所避嫌说明</p>
               <h2>本系统只对饭点负责</h2>
             </div>
             <p>
@@ -144,7 +153,7 @@
     <dialog class="meal-dialog" id="mealDialog" aria-labelledby="mealTitle">
       <form method="dialog">
         <button class="dialog-close" value="close" aria-label="关闭">×</button>
-        <p class="eyebrow">饭桶研究所 · 今日摄入指令</p>
+        <p class="eyebrow">饭桶研究所 · 今日吃啥指令</p>
         <h2 id="mealTitle">系统正在拍桌决定</h2>
         <div class="meal-result" id="mealResult"></div>
         <div class="dialog-actions">
@@ -154,6 +163,6 @@
       </form>
     </dialog>
 
-    <script src="./app.js" defer></script>
+    <script type="module" src="./app.js"></script>
   </body>
 </html>

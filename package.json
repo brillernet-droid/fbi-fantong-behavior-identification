@@ -7,10 +7,14 @@
   "type": "module",
   "scripts": {
     "start": "python3 -m http.server 4173",
-    "check": "node --check app.js"
+    "check": "node --check app.js && node --check data.js && node --check logic.js && node --check tests/catalog.test.js",
+    "test": "node --test tests/*.test.js"
   },
   "keywords": [
     "fantong",
+    "干饭",
+    "饭点",
+    "外卖",
     "personality-test",
     "meme",
     "static-site",

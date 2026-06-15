@@ -1,6 +1,6 @@
 # 饭桶研究所
 
-一个荒诞、好玩、meme-friendly 的饭点人格测试小应用。
+一个面向中文语境的荒诞饭点人格测试小应用，重点观察早八、外卖满减、拼单、食堂、夜宵和选择困难等中国饭点行为。
 
 产品结构：
 
@@ -24,11 +24,12 @@
   - 直接决定今天吃啥
   - 我拒绝被识别
 - 拒绝按钮彩蛋：`拒绝无效。饭点行为已经暴露。`
-- 8 道饭点行为问题
+- 8 道本土饭点行为问题
 - 自动生成 `FBI 饭桶行为识别报告`
 - 内置 `FBI 饭桶行为 16 型档案`
-- 随机饭点推荐弹窗
+- 随机“今天吃啥”推荐弹窗
 - 桌面端与移动端响应式适配
+- 内置数据完整性测试和 GitHub Actions
 
 ## Important Note
 
@@ -40,9 +41,7 @@ This project is not affiliated with, endorsed by, or connected to any real gover
 
 ## Run Locally
 
-直接打开 `index.html` 即可。
-
-也可以用本地静态服务器运行：
+使用本地静态服务器运行：
 
 ```bash
 python3 -m http.server 4173
@@ -69,6 +68,12 @@ http://127.0.0.1:4173/
 ```
 
 ## Development
+
+运行测试：
+
+```bash
+npm test
+```
 
 检查 JavaScript 语法：
 
