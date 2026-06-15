@@ -1,0 +1,20 @@
+{
+  "name": "fbi-fantong-behavior-identification",
+  "version": "1.0.0",
+  "description": "饭桶研究所出品的 FBI 饭桶行为识别系统。FBI = FanTong Behavior Identification.",
+  "private": false,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 4173",
+    "check": "node --check app.js"
+  },
+  "keywords": [
+    "fantong",
+    "personality-test",
+    "meme",
+    "static-site",
+    "chinese-web-app"
+  ],
+  "author": "brillernet-droid"
+}

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>饭桶研究所 | FBI 饭桶行为识别系统</title>
+    <meta
+      name="description"
+      content="饭桶研究所出品的 FBI 饭桶行为识别系统，FBI = FanTong Behavior Identification。"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar" aria-label="饭桶研究所">
+        <a class="brand" href="#home" aria-label="返回饭桶研究所首页">
+          <span class="brand-mark" aria-hidden="true">饭</span>
+          <span>
+            <strong>饭桶研究所</strong>
+            <small>FanTong Lab</small>
+          </span>
+        </a>
+        <nav class="topnav" aria-label="主导航">
+          <a href="#home">识别系统</a>
+          <a href="#archive">16 型档案</a>
+          <a href="#lab-note">研究备注</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero screen is-active" id="home">
+          <img
+            class="hero-art"
+            src="./assets/fantong-lab-hero.png"
+            alt="饭桶研究所的食堂实验室插画，研究员围绕一碗米饭观察饭点行为"
+          />
+          <div class="hero-overlay" aria-hidden="true"></div>
+          <div class="hero-content">
+            <p class="eyebrow">饭桶研究所 · 内部行为观察组</p>
+            <h1>FBI 饭桶行为识别系统</h1>
+            <p class="hero-copy">
+              FBI = FanTong Behavior Identification。一个只研究饭点、选择困难和突然很饿的虚构系统。
+            </p>
+            <div class="hero-actions" aria-label="首页操作">
+              <button class="btn btn-primary" id="startTest" type="button">启动 FBI 识别</button>
+              <button class="btn btn-secondary" id="decideMeal" type="button">直接决定今天吃啥</button>
+              <button class="btn btn-ghost" id="rejectBtn" type="button">我拒绝被识别</button>
+            </div>
+            <p class="reject-notice" id="rejectNotice" role="status" aria-live="polite" hidden>
+              拒绝无效。饭点行为已经暴露。
+            </p>
+          </div>
+        </section>
+
+        <section class="quiz-screen" id="quiz" hidden>
+          <div class="section-wrap">
+            <div class="screen-heading">
+              <p class="eyebrow">FBI 饭桶行为识别系统</p>
+              <h2>样本采集</h2>
+              <p>当前系统只采集饭点行为，不采集真实身份。</p>
+            </div>
+
+            <div class="quiz-layout">
+              <aside class="sample-panel" aria-label="识别对象输入">
+                <label for="subjectName">识别对象</label>
+                <input id="subjectName" name="subjectName" type="text" maxlength="18" placeholder="例如：今天很饿的我" />
+                <div class="sample-meter" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <p class="sample-status" id="sampleStatus">饭点信号待校准</p>
+              </aside>
+
+              <div class="question-panel" aria-live="polite">
+                <div class="progress-row">
+                  <span id="questionCounter">1 / 8</span>
+                  <span id="progressLabel">行为雷达启动中</span>
+                </div>
+                <div class="progress-track" aria-hidden="true">
+                  <span id="progressBar"></span>
+                </div>
+                <h3 id="questionText"></h3>
+                <div class="options-grid" id="optionsGrid"></div>
+                <div class="quiz-controls">
+                  <button class="btn btn-light" id="backBtn" type="button">上一题</button>
+                  <button class="btn btn-ghost-dark" id="cancelQuiz" type="button">返回首页</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="result-screen" id="result" hidden>
+          <div class="section-wrap">
+            <article class="report-card" aria-labelledby="reportTitle">
+              <div class="report-head">
+                <div>
+                  <p class="eyebrow">FanTong Behavior Identification</p>
+                  <h2 id="reportTitle">【FBI 饭桶行为识别报告】</h2>
+                </div>
+                <span class="report-stamp">内部玩梗样本</span>
+              </div>
+
+              <dl class="report-fields" id="reportFields"></dl>
+              <p class="watermark">生成自：饭桶研究所</p>
+            </article>
+
+            <div class="result-actions">
+              <button class="btn btn-primary" id="restartBtn" type="button">重新识别</button>
+              <button class="btn btn-secondary" id="mealFromResult" type="button">决定一顿补充摄入</button>
+              <a class="btn btn-link" href="#archive">查看 16 型档案</a>
+            </div>
+          </div>
+        </section>
+
+        <section class="archive-section" id="archive">
+          <div class="section-wrap">
+            <div class="screen-heading">
+              <p class="eyebrow">饭桶研究所档案库</p>
+              <h2>FBI 饭桶行为 16 型档案</h2>
+            </div>
+            <div class="type-grid" id="typeGrid"></div>
+          </div>
+        </section>
+
+        <section class="lab-note" id="lab-note">
+          <div class="section-wrap note-wrap">
+            <div>
+              <p class="eyebrow">研究所备注</p>
+              <h2>本系统只对饭点负责</h2>
+            </div>
+            <p>
+              FBI 在这里仅指 FanTong Behavior Identification，是饭桶研究所的虚构研究系统。
+              不使用真实机构品牌、徽章、印章或执法符号。
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog class="meal-dialog" id="mealDialog" aria-labelledby="mealTitle">
+      <form method="dialog">
+        <button class="dialog-close" value="close" aria-label="关闭">×</button>
+        <p class="eyebrow">饭桶研究所 · 今日摄入指令</p>
+        <h2 id="mealTitle">系统正在拍桌决定</h2>
+        <div class="meal-result" id="mealResult"></div>
+        <div class="dialog-actions">
+          <button class="btn btn-secondary" id="rerollMeal" type="button">换一个</button>
+          <button class="btn btn-primary" value="close">收到，开吃</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
