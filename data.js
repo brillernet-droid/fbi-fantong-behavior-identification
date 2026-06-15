@@ -21,7 +21,8 @@ export const types = [
     recommended: "黄焖鸡米饭、牛肉面、热汤馄饨",
     caution: "需要等位 90 分钟的网红店",
     risk: "高饥饿反应级",
-    comment: "建议随身备一根能量棒，防止会议拖堂触发眼神预警。"
+    comment: "建议随身备一根能量棒，防止会议拖堂触发眼神预警。",
+    metrics: { impulse: 96, discount: 42, social: 48 }
   },
   {
     id: "archive",
@@ -33,7 +34,8 @@ export const types = [
     recommended: "家常小炒、季节限定、手写菜单小馆",
     caution: "只有套餐 A 和套餐 B 的极简店",
     risk: "中度纠结扩散级",
-    comment: "研究所建议给你配一名同桌，职责是到点合上菜单。"
+    comment: "研究所建议给你配一名同桌，职责是到点合上菜单。",
+    metrics: { impulse: 46, discount: 74, social: 58 }
   },
   {
     id: "comfort",
@@ -45,7 +47,8 @@ export const types = [
     recommended: "家常盖饭、热粥、砂锅粉丝",
     caution: "菜单每天变的实验厨房",
     risk: "低风险高依赖级",
-    comment: "稳定不是保守，是你和胃部签订的长期战略协议。"
+    comment: "稳定不是保守，是你和胃部签订的长期战略协议。",
+    metrics: { impulse: 55, discount: 38, social: 40 }
   },
   {
     id: "random",
@@ -57,7 +60,8 @@ export const types = [
     recommended: "双拼饭、麻辣烫、当日推荐套餐",
     caution: "口味过于极端的隐藏菜单",
     risk: "波动惊喜级",
-    comment: "研究所无法预测你，但可以确认你让饭点变得很有戏。"
+    comment: "研究所无法预测你，但可以确认你让饭点变得很有戏。",
+    metrics: { impulse: 82, discount: 51, social: 44 }
   },
   {
     id: "social",
@@ -69,7 +73,8 @@ export const types = [
     recommended: "火锅、烤肉、大盘鸡、东北菜",
     caution: "只能单人独享的小份料理",
     risk: "中高社交传染级",
-    comment: "你不是在吃饭，你是在维护人类饭桌文明。"
+    comment: "你不是在吃饭，你是在维护人类饭桌文明。",
+    metrics: { impulse: 68, discount: 63, social: 96 }
   },
   {
     id: "solo",
@@ -81,7 +86,8 @@ export const types = [
     recommended: "兰州牛肉面、便当、单人小火锅",
     caution: "必须八个人起订的团餐",
     risk: "低干扰沉浸级",
-    comment: "研究所尊重你的餐桌边界，并为最后一块肉保密。"
+    comment: "研究所尊重你的餐桌边界，并为最后一块肉保密。",
+    metrics: { impulse: 50, discount: 35, social: 18 }
   },
   {
     id: "budget",
@@ -93,7 +99,8 @@ export const types = [
     recommended: "团购套餐、工作日特价、拼单外卖",
     caution: "无明码标价的随缘菜馆",
     risk: "精算过载级",
-    comment: "你不是抠门，你是在进行碳水资产配置。"
+    comment: "你不是抠门，你是在进行碳水资产配置。",
+    metrics: { impulse: 54, discount: 98, social: 62 }
   },
   {
     id: "premium",
@@ -105,7 +112,8 @@ export const types = [
     recommended: "广式早茶、精致简餐、奶茶甜品收尾",
     caution: "塑料袋里直接开吃",
     risk: "审美延迟级",
-    comment: "建议继续保持，生活已经够忙，饭可以稍微隆重。"
+    comment: "建议继续保持，生活已经够忙，饭可以稍微隆重。",
+    metrics: { impulse: 61, discount: 34, social: 78 }
   },
   {
     id: "spicy",
@@ -117,7 +125,8 @@ export const types = [
     recommended: "川湘菜、麻辣香锅、冒菜",
     caution: "连续三天叠加极辣任务",
     risk: "红色预警级",
-    comment: "研究所建议同步部署酸奶，不要让胃独自承担英雄主义。"
+    comment: "研究所建议同步部署酸奶，不要让胃独自承担英雄主义。",
+    metrics: { impulse: 88, discount: 41, social: 64 }
   },
   {
     id: "clean",
@@ -129,7 +138,8 @@ export const types = [
     recommended: "蒸菜、轻食饭、清汤粉",
     caution: "厚重奶油加双倍芝士",
     risk: "低负担稳定级",
-    comment: "你像一键清理缓存，但比手机管家更会吃。"
+    comment: "你像一键清理缓存，但比手机管家更会吃。",
+    metrics: { impulse: 38, discount: 33, social: 36 }
   },
   {
     id: "carb",
@@ -141,7 +151,8 @@ export const types = [
     recommended: "葱油拌面、蛋炒饭、煲仔饭",
     caution: "只有菜叶没有主食的局",
     risk: "满足感拉满级",
-    comment: "研究所确认：碳水不是退路，是你今天继续前进的燃料。"
+    comment: "研究所确认：碳水不是退路，是你今天继续前进的燃料。",
+    metrics: { impulse: 84, discount: 48, social: 42 }
   },
   {
     id: "protein",
@@ -153,7 +164,8 @@ export const types = [
     recommended: "卤肉饭、烤鱼、铁板牛肉",
     caution: "只有小菜和点心的下午茶局",
     risk: "高能量占有级",
-    comment: "建议搭配一点蔬菜，给系统留出散热空间。"
+    comment: "建议搭配一点蔬菜，给系统留出散热空间。",
+    metrics: { impulse: 78, discount: 39, social: 52 }
   },
   {
     id: "late",
@@ -165,7 +177,8 @@ export const types = [
     recommended: "粥底火锅、烧烤、热汤粉",
     caution: "临睡前暴击式重油重辣",
     risk: "夜间活跃级",
-    comment: "研究所建议留一盏小灯，也给明天的自己留一条活路。"
+    comment: "研究所建议留一盏小灯，也给明天的自己留一条活路。",
+    metrics: { impulse: 91, discount: 44, social: 57 }
   },
   {
     id: "early",
@@ -177,7 +190,8 @@ export const types = [
     recommended: "豆浆油条、鸡蛋三明治、热粥包子",
     caution: "空腹硬扛到午饭",
     risk: "晨间稳定级",
-    comment: "你是研究所眼里罕见的启动规范样本。"
+    comment: "你是研究所眼里罕见的启动规范样本。",
+    metrics: { impulse: 43, discount: 36, social: 34 }
   },
   {
     id: "indecisive",
@@ -189,7 +203,8 @@ export const types = [
     recommended: "双拼饭、套餐、朋友指定款",
     caution: "有 128 道菜的大菜单",
     risk: "高纠结滞留级",
-    comment: "你不是没主见，你只是对每一种好吃都抱有基本尊重。"
+    comment: "你不是没主见，你只是对每一种好吃都抱有基本尊重。",
+    metrics: { impulse: 49, discount: 67, social: 55 }
   },
   {
     id: "leftover",
@@ -201,7 +216,8 @@ export const types = [
     recommended: "炒饭、汤面、杂蔬锅",
     caution: "需要新鲜现买所有材料的大菜",
     risk: "勤俭创造级",
-    comment: "研究所认为你拥有把普通食材讲成连续剧的能力。"
+    comment: "研究所认为你拥有把普通食材讲成连续剧的能力。",
+    metrics: { impulse: 52, discount: 86, social: 31 }
   }
 ];
 

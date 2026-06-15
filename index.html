@@ -9,14 +9,19 @@
       content="饭桶研究所出品的 FBI 饭桶行为识别系统，识别早八、外卖满减、拼单、夜宵和选择困难等中国饭点行为。"
     />
     <meta name="theme-color" content="#d94d32" />
+    <link rel="canonical" href="https://brillernet-droid.github.io/fbi-fantong-behavior-identification/" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://brillernet-droid.github.io/fbi-fantong-behavior-identification/" />
     <meta property="og:title" content="饭桶研究所 | FBI 饭桶行为识别系统" />
     <meta
       property="og:description"
       content="测测你的早八、外卖满减、拼单、夜宵和干饭行为，会被饭桶研究所识别成哪一型。"
     />
-    <meta property="og:image" content="./assets/fantong-lab-hero.png" />
+    <meta
+      property="og:image"
+      content="https://brillernet-droid.github.io/fbi-fantong-behavior-identification/assets/fantong-lab-hero.png"
+    />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -113,15 +118,18 @@
                 <span class="report-stamp">本土玩梗样本</span>
               </div>
 
+              <div class="metrics-panel" id="metricsPanel" aria-label="饭桶行为维度"></div>
               <dl class="report-fields" id="reportFields"></dl>
               <p class="watermark">生成自：饭桶研究所</p>
             </article>
 
             <div class="result-actions">
-              <button class="btn btn-primary" id="restartBtn" type="button">重新识别</button>
-              <button class="btn btn-secondary" id="mealFromResult" type="button">决定今晚吃啥</button>
+              <button class="btn btn-primary" id="posterBtn" type="button">生成报告海报</button>
+              <button class="btn btn-secondary" id="mealFromResult" type="button">直接决定今晚吃啥</button>
+              <button class="btn btn-light" id="restartBtn" type="button">再测一次</button>
               <a class="btn btn-link" href="#archive">查看 16 型档案</a>
             </div>
+            <p class="poster-status" id="posterStatus" role="status" aria-live="polite"></p>
           </div>
         </section>
 

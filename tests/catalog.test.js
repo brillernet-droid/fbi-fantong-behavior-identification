@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { REPORT_FIELD_LABELS, meals, questions, types } from "../data.js";
-import { buildReportFields, pickTypeFromAnswers, scoreAnswers } from "../logic.js";
+import { METRIC_LABELS, buildPosterPayload, buildReportFields, pickTypeFromAnswers, scoreAnswers } from "../logic.js";
 
 const REQUIRED_TYPE_FIELDS = [
   "id",
@@ -30,6 +30,12 @@ test("type catalog is complete and unique", () => {
     for (const field of REQUIRED_TYPE_FIELDS) {
       assert.equal(typeof type[field], "string", `${type.id}.${field} should be a string`);
       assert.ok(type[field].trim(), `${type.id}.${field} should not be empty`);
+    }
+
+    assert.deepEqual(Object.keys(type.metrics).sort(), ["discount", "impulse", "social"]);
+    for (const value of Object.values(type.metrics)) {
+      assert.equal(Number.isInteger(value), true);
+      assert.ok(value >= 0 && value <= 100, `${type.id}.metrics values should be 0-100`);
     }
 
     assert.match(type.code, /^FBI-[A-D]0[1-4]$/);
@@ -101,4 +107,24 @@ test("result scoring and report fields stay stable", () => {
   );
   assert.equal(fields[0].value, "早八干饭人");
   assert.equal(fields.length, 9);
+});
+
+test("poster payload is complete", () => {
+  const type = types.find((item) => item.id === "budget");
+  const payload = buildPosterPayload(type, "满减观察员");
+
+  assert.equal(payload.title, "【FBI 饭桶行为识别报告】");
+  assert.equal(payload.subject, "满减观察员");
+  assert.equal(payload.typeName, type.name);
+  assert.equal(payload.code, type.code);
+  assert.equal(payload.judgment, type.judgment);
+  assert.equal(payload.recommended, type.recommended);
+  assert.equal(payload.risk, type.risk);
+  assert.equal(payload.watermark, "生成自：饭桶研究所");
+  assert.deepEqual(payload.metrics, type.metrics);
+  assert.deepEqual(payload.metricLabels, METRIC_LABELS);
+
+  for (const value of Object.values(payload)) {
+    if (typeof value === "string") assert.ok(value.trim());
+  }
 });

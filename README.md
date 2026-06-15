@@ -2,6 +2,10 @@
 
 一个面向中文语境的荒诞饭点人格测试小应用，重点观察早八、外卖满减、拼单、食堂、夜宵和选择困难等中国饭点行为。
 
+## Live Demo
+
+[打开饭桶研究所](https://brillernet-droid.github.io/fbi-fantong-behavior-identification/)
+
 产品结构：
 
 - App name: 饭桶研究所
@@ -28,6 +32,8 @@
 - 自动生成 `FBI 饭桶行为识别报告`
 - 内置 `FBI 饭桶行为 16 型档案`
 - 随机“今天吃啥”推荐弹窗
+- 结果页生成可下载/可分享的报告海报
+- 三个本土饭点维度：干饭冲动值、满减敏感度、饭局社交值
 - 桌面端与移动端响应式适配
 - 内置数据完整性测试和 GitHub Actions
 
@@ -60,8 +66,11 @@ http://127.0.0.1:4173/
 ├── assets/
 │   └── fantong-lab-hero.png
 ├── app.js
+├── data.js
 ├── index.html
+├── logic.js
 ├── styles.css
+├── tests/
 ├── LICENSE
 ├── package.json
 └── README.md

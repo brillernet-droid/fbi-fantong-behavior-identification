@@ -510,6 +510,12 @@ input:focus-visible,
   transform: translateY(-2px);
 }
 
+.option-btn.is-selected {
+  border-color: rgba(217, 77, 50, 0.72);
+  background: #fff4da;
+  box-shadow: inset 0 0 0 2px rgba(217, 77, 50, 0.12);
+}
+
 .archive-section {
   background:
     linear-gradient(180deg, rgba(47, 114, 93, 0.1), rgba(216, 155, 35, 0.1)),
@@ -606,6 +612,57 @@ input:focus-visible,
   margin: 0;
 }
 
+.metrics-panel {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.metric-item {
+  border: 1px solid rgba(32, 39, 35, 0.14);
+  border-radius: 8px;
+  padding: 14px;
+  background: rgba(255, 253, 247, 0.82);
+}
+
+.metric-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.metric-top span {
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+.metric-top strong {
+  color: var(--tomato-dark);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.metric-track {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: rgba(32, 39, 35, 0.1);
+}
+
+.metric-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--tomato), var(--mustard), var(--soy));
+}
+
 .report-field {
   border: 1px solid rgba(32, 39, 35, 0.14);
   border-radius: 8px;
@@ -643,6 +700,14 @@ input:focus-visible,
 
 .result-actions {
   margin-top: 18px;
+}
+
+.poster-status {
+  min-height: 28px;
+  margin: 12px 0 0;
+  color: var(--ink-soft);
+  font-weight: 800;
+  line-height: 1.6;
 }
 
 .lab-note {
@@ -815,6 +880,7 @@ input:focus-visible,
 
   .options-grid,
   .report-fields,
+  .metrics-panel,
   .type-grid {
     grid-template-columns: 1fr;
   }

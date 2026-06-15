@@ -1,5 +1,11 @@
 import { REPORT_FIELD_LABELS } from "./data.js";
 
+export const METRIC_LABELS = {
+  impulse: "干饭冲动值",
+  discount: "满减敏感度",
+  social: "饭局社交值"
+};
+
 export function scoreAnswers(types, answers) {
   const scores = Object.fromEntries(types.map((type) => [type.id, 0]));
 
@@ -39,4 +45,20 @@ export function buildReportFields(type, subject) {
     value: values[index],
     wide: ["系统判断", "高频行为", "研究所评语"].includes(label)
   }));
+}
+
+export function buildPosterPayload(type, subject) {
+  return {
+    title: "【FBI 饭桶行为识别报告】",
+    subtitle: "FanTong Behavior Identification",
+    subject: subject || "未署名饭桶",
+    typeName: type.name,
+    code: type.code,
+    judgment: type.judgment,
+    recommended: type.recommended,
+    risk: type.risk,
+    metrics: type.metrics,
+    metricLabels: METRIC_LABELS,
+    watermark: "生成自：饭桶研究所"
+  };
 }
