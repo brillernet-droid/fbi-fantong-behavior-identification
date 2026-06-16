@@ -32,10 +32,12 @@
 - 自动生成 `FBI 饭桶行为识别报告`
 - 内置 `FBI 饭桶行为 16 型档案`
 - 随机“今天吃啥”推荐弹窗
-- 结果页生成可下载/可分享的报告海报
+- 结果页生成可预览、长按保存、可分享/下载的报告海报
 - 三个本土饭点维度：干饭冲动值、满减敏感度、饭局社交值
+- 饭桶类型热度榜和结果传播金句
 - 桌面端与移动端响应式适配
 - 内置数据完整性测试和 GitHub Actions
+- 小红书/抖音/微信群传播素材包
 
 ## Important Note
 
@@ -69,6 +71,7 @@ http://127.0.0.1:4173/
 ├── data.js
 ├── index.html
 ├── logic.js
+├── marketing/
 ├── styles.css
 ├── tests/
 ├── LICENSE
@@ -77,6 +80,13 @@ http://127.0.0.1:4173/
 ```
 
 ## Development
+
+传播素材：
+
+```text
+marketing/viral-kit.md
+marketing/covers/
+```
 
 运行测试：
 

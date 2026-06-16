@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200" role="img" aria-labelledby="title desc">
+  <title id="title">早八续航型封面</title>
+  <desc id="desc">用于传播早八续航型饭桶人格的封面</desc>
+  <rect width="900" height="1200" fill="#fffaf0"/>
+  <rect x="48" y="48" width="804" height="1104" rx="28" fill="#fff4da" stroke="#202723" stroke-opacity=".16" stroke-width="3"/>
+  <circle cx="710" cy="180" r="106" fill="#d89b23" opacity=".35"/>
+  <text x="90" y="150" fill="#d94d32" font-size="38" font-weight="900" font-family="PingFang SC, Microsoft YaHei, sans-serif">早八续航型</text>
+  <text x="90" y="330" fill="#202723" font-size="88" font-weight="950" font-family="PingFang SC, Microsoft YaHei, sans-serif">早八不可怕</text>
+  <text x="90" y="440" fill="#202723" font-size="88" font-weight="950" font-family="PingFang SC, Microsoft YaHei, sans-serif">没吃才可怕</text>
+  <text x="90" y="580" fill="#47524c" font-size="46" font-weight="900" font-family="PingFang SC, Microsoft YaHei, sans-serif">豆浆包子是启动协议</text>
+  <rect x="90" y="840" width="720" height="128" rx="18" fill="#2f725d"/>
+  <text x="130" y="922" fill="#fffaf0" font-size="48" font-weight="950" font-family="PingFang SC, Microsoft YaHei, sans-serif">测测你的饭点人格</text>
+  <text x="90" y="1070" fill="#47524c" font-size="30" font-weight="800" font-family="PingFang SC, Microsoft YaHei, sans-serif">饭桶研究所 · FBI 饭桶行为识别报告</text>
+</svg>

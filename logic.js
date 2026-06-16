@@ -37,14 +37,23 @@ export function buildReportFields(type, subject) {
     type.recommended,
     type.caution,
     type.risk,
-    type.comment
+    type.comment,
+    type.shareLine
   ];
 
-  return REPORT_FIELD_LABELS.map((label, index) => ({
+  const fields = REPORT_FIELD_LABELS.map((label, index) => ({
     label,
     value: values[index],
     wide: ["系统判断", "高频行为", "研究所评语"].includes(label)
   }));
+
+  fields.push({
+    label: "传播金句",
+    value: type.shareLine,
+    wide: true
+  });
+
+  return fields;
 }
 
 export function buildPosterPayload(type, subject) {
@@ -57,8 +66,14 @@ export function buildPosterPayload(type, subject) {
     judgment: type.judgment,
     recommended: type.recommended,
     risk: type.risk,
+    shareLine: type.shareLine,
+    viralScore: type.viralScore,
     metrics: type.metrics,
     metricLabels: METRIC_LABELS,
     watermark: "生成自：饭桶研究所"
   };
+}
+
+export function buildLeaderboard(types, limit = 6) {
+  return [...types].sort((a, b) => b.viralScore - a.viralScore).slice(0, limit);
 }

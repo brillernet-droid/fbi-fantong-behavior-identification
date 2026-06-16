@@ -14,7 +14,8 @@ const REQUIRED_TYPE_FIELDS = [
   "recommended",
   "caution",
   "risk",
-  "comment"
+  "comment",
+  "shareLine"
 ];
 
 const LOCAL_MARKERS = ["早八", "外卖", "满减", "拼单", "食堂", "夜宵", "打工", "小区门口", "奶茶", "团购"];
@@ -33,6 +34,9 @@ test("type catalog is complete and unique", () => {
     }
 
     assert.deepEqual(Object.keys(type.metrics).sort(), ["discount", "impulse", "social"]);
+    assert.equal(Number.isInteger(type.viralScore), true);
+    assert.ok(type.viralScore >= 0 && type.viralScore <= 100, `${type.id}.viralScore should be 0-100`);
+
     for (const value of Object.values(type.metrics)) {
       assert.equal(Number.isInteger(value), true);
       assert.ok(value >= 0 && value <= 100, `${type.id}.metrics values should be 0-100`);
@@ -101,12 +105,10 @@ test("result scoring and report fields stay stable", () => {
 
   assert.equal(Object.keys(scores).length, 16);
   assert.ok(type.id);
-  assert.deepEqual(
-    fields.map((field) => field.label),
-    REPORT_FIELD_LABELS
-  );
+  assert.deepEqual(fields.slice(0, REPORT_FIELD_LABELS.length).map((field) => field.label), REPORT_FIELD_LABELS);
   assert.equal(fields[0].value, "早八干饭人");
-  assert.equal(fields.length, 9);
+  assert.equal(fields.at(-1).label, "传播金句");
+  assert.equal(fields.length, 10);
 });
 
 test("poster payload is complete", () => {
@@ -120,6 +122,8 @@ test("poster payload is complete", () => {
   assert.equal(payload.judgment, type.judgment);
   assert.equal(payload.recommended, type.recommended);
   assert.equal(payload.risk, type.risk);
+  assert.equal(payload.shareLine, type.shareLine);
+  assert.equal(payload.viralScore, type.viralScore);
   assert.equal(payload.watermark, "生成自：饭桶研究所");
   assert.deepEqual(payload.metrics, type.metrics);
   assert.deepEqual(payload.metricLabels, METRIC_LABELS);
@@ -127,4 +131,15 @@ test("poster payload is complete", () => {
   for (const value of Object.values(payload)) {
     if (typeof value === "string") assert.ok(value.trim());
   }
+});
+
+test("leaderboard ranks by viral score", async () => {
+  const { buildLeaderboard } = await import("../logic.js");
+  const leaders = buildLeaderboard(types, 6);
+
+  assert.equal(leaders.length, 6);
+  for (let index = 1; index < leaders.length; index += 1) {
+    assert.ok(leaders[index - 1].viralScore >= leaders[index].viralScore);
+  }
+  assert.equal(leaders[0].id, "budget");
 });

@@ -36,6 +36,7 @@
         </a>
         <nav class="topnav" aria-label="主导航">
           <a href="#home">开测</a>
+          <a href="#leaderboard">热度榜</a>
           <a href="#archive">16 型档案</a>
           <a href="#lab-note">避嫌说明</a>
         </nav>
@@ -130,6 +131,20 @@
               <a class="btn btn-link" href="#archive">查看 16 型档案</a>
             </div>
             <p class="poster-status" id="posterStatus" role="status" aria-live="polite"></p>
+            <div class="poster-preview-wrap" id="posterPreviewWrap" hidden>
+              <img class="poster-preview" id="posterPreview" alt="饭桶行为识别报告海报预览" />
+            </div>
+          </div>
+        </section>
+
+        <section class="leaderboard-section" id="leaderboard">
+          <div class="section-wrap">
+            <div class="screen-heading">
+              <p class="eyebrow">饭桶研究所传播观察</p>
+              <h2>饭桶类型热度榜</h2>
+              <p>根据截图欲望、群聊攻击性和“这说的不就是我吗”浓度生成。</p>
+            </div>
+            <div class="leaderboard-grid" id="leaderboardGrid"></div>
           </div>
         </section>
 

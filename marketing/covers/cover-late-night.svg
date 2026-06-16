@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200" role="img" aria-labelledby="title desc">
+  <title id="title">夜宵复活型封面</title>
+  <desc id="desc">用于传播夜宵复活型饭桶人格的封面</desc>
+  <rect width="900" height="1200" fill="#202723"/>
+  <rect x="48" y="48" width="804" height="1104" rx="28" fill="#2f3832" stroke="#fffaf0" stroke-opacity=".18" stroke-width="3"/>
+  <circle cx="704" cy="202" r="110" fill="#d89b23" opacity=".8"/>
+  <circle cx="704" cy="202" r="82" fill="#2f3832"/>
+  <text x="90" y="150" fill="#ffd28a" font-size="38" font-weight="900" font-family="PingFang SC, Microsoft YaHei, sans-serif">夜宵复活型</text>
+  <text x="90" y="330" fill="#fffaf0" font-size="88" font-weight="950" font-family="PingFang SC, Microsoft YaHei, sans-serif">白天打工</text>
+  <text x="90" y="440" fill="#fffaf0" font-size="88" font-weight="950" font-family="PingFang SC, Microsoft YaHei, sans-serif">晚上复活</text>
+  <text x="90" y="580" fill="#ffd28a" font-size="50" font-weight="950" font-family="PingFang SC, Microsoft YaHei, sans-serif">现在是不是又饿了？</text>
+  <rect x="90" y="840" width="720" height="128" rx="18" fill="#d94d32"/>
+  <text x="130" y="922" fill="#fffaf0" font-size="48" font-weight="950" font-family="PingFang SC, Microsoft YaHei, sans-serif">夜宵局开测</text>
+  <text x="90" y="1070" fill="#d7c7ad" font-size="30" font-weight="800" font-family="PingFang SC, Microsoft YaHei, sans-serif">饭桶研究所 · FBI 饭桶行为识别报告</text>
+</svg>

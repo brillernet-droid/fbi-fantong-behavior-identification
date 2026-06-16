@@ -1,10 +1,11 @@
 import { meals, questions, types } from "./data.js";
-import { METRIC_LABELS, buildPosterPayload, buildReportFields, pickTypeFromAnswers } from "./logic.js";
+import { METRIC_LABELS, buildLeaderboard, buildPosterPayload, buildReportFields, pickTypeFromAnswers } from "./logic.js";
 
 const appState = {
   index: 0,
   answers: [],
-  currentPosterPayload: null
+  currentPosterPayload: null,
+  currentPosterUrl: null
 };
 
 const PROGRESS_LABELS = [
@@ -40,6 +41,9 @@ const optionsGrid = document.querySelector("#optionsGrid");
 const metricsPanel = document.querySelector("#metricsPanel");
 const reportFields = document.querySelector("#reportFields");
 const posterStatus = document.querySelector("#posterStatus");
+const posterPreviewWrap = document.querySelector("#posterPreviewWrap");
+const posterPreview = document.querySelector("#posterPreview");
+const leaderboardGrid = document.querySelector("#leaderboardGrid");
 const typeGrid = document.querySelector("#typeGrid");
 const mealDialog = document.querySelector("#mealDialog");
 const mealTitle = document.querySelector("#mealTitle");
@@ -120,12 +124,33 @@ function pickType() {
   return pickTypeFromAnswers(types, appState.answers, subjectName.value.trim());
 }
 
+function clearPosterPreview() {
+  if (appState.currentPosterUrl) {
+    URL.revokeObjectURL(appState.currentPosterUrl);
+    appState.currentPosterUrl = null;
+  }
+
+  posterPreview.removeAttribute("src");
+  posterPreviewWrap.hidden = true;
+}
+
+function showPosterPreview(blob, filename) {
+  clearPosterPreview();
+  const url = URL.createObjectURL(blob);
+  appState.currentPosterUrl = url;
+  posterPreview.src = url;
+  posterPreview.alt = `${filename} 海报预览`;
+  posterPreviewWrap.hidden = false;
+  return url;
+}
+
 function renderReport() {
   const type = pickType();
   const subject = subjectName.value.trim() || "未署名饭桶";
   const fields = buildReportFields(type, subject);
   appState.currentPosterPayload = buildPosterPayload(type, subject);
   posterStatus.textContent = "";
+  clearPosterPreview();
   renderMetrics(type.metrics);
 
   reportFields.replaceChildren(
@@ -249,6 +274,10 @@ function drawPoster(payload) {
   ctx.font = "850 34px system-ui, sans-serif";
   y = wrapText(ctx, payload.recommended, 112, y + 108, 800, 48, 2);
 
+  ctx.fillStyle = "#a73524";
+  ctx.font = "900 32px system-ui, sans-serif";
+  y = wrapText(ctx, payload.shareLine, 112, y + 72, 800, 44, 2);
+
   y += 54;
   Object.entries(payload.metricLabels).forEach(([key, label]) => {
     const value = payload.metrics[key];
@@ -311,24 +340,33 @@ async function generatePoster() {
   const blob = await canvasToBlob(canvas);
   const filename = `fantong-report-${payload.code}.png`;
   const file = new File([blob], filename, { type: "image/png" });
+  const posterUrl = showPosterPreview(blob, filename);
 
   if (navigator.canShare?.({ files: [file] })) {
-    await navigator.share({
-      files: [file],
-      title: "FBI 饭桶行为识别报告",
-      text: `${payload.subject} 的饭桶行为类型：${payload.typeName}`
-    });
-    posterStatus.textContent = "海报已交给系统分享。";
-    return;
+    try {
+      await navigator.share({
+        files: [file],
+        title: "FBI 饭桶行为识别报告",
+        text: `${payload.subject} 的饭桶行为类型：${payload.typeName}`
+      });
+      posterStatus.textContent = "海报已交给系统分享，也可长按预览图保存。";
+      return;
+    } catch {
+      posterStatus.textContent = "海报已生成，可长按预览图保存，或再点一次尝试分享。";
+      return;
+    }
   }
 
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  link.click();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-  posterStatus.textContent = "海报已下载，可发给朋友进行饭点会诊。";
+  try {
+    const link = document.createElement("a");
+    link.href = posterUrl;
+    link.download = filename;
+    link.click();
+    posterStatus.textContent = "海报已生成，已尝试自动下载，也可长按预览图保存。";
+  } catch {
+    posterStatus.textContent = "海报已生成，可长按预览图保存。";
+    return;
+  }
 }
 
 function renderArchive() {
@@ -337,6 +375,26 @@ function renderArchive() {
       const card = document.createElement("article");
       card.className = "type-card";
       card.innerHTML = `<b>${type.code}</b><h3>${type.name}</h3><p>${type.summary}</p>`;
+      return card;
+    })
+  );
+}
+
+function renderLeaderboard() {
+  const leaders = buildLeaderboard(types, 6);
+  leaderboardGrid.replaceChildren(
+    ...leaders.map((type, index) => {
+      const card = document.createElement("article");
+      card.className = "leaderboard-card";
+      card.innerHTML = `
+        <span class="rank-mark">TOP ${index + 1}</span>
+        <h3>${type.name}</h3>
+        <p>${type.shareLine}</p>
+        <div class="rank-score">
+          <span>传播热度</span>
+          <strong>${type.viralScore}</strong>
+        </div>
+      `;
       return card;
     })
   );
@@ -379,3 +437,4 @@ cancelQuiz.addEventListener("click", () => setScreen("home"));
 backBtn.addEventListener("click", goBack);
 
 renderArchive();
+renderLeaderboard();

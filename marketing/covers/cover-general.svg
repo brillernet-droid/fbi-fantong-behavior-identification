@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200" role="img" aria-labelledby="title desc">
+  <title id="title">饭桶研究所通用封面</title>
+  <desc id="desc">用于小红书和社交平台的饭点人格测试封面</desc>
+  <rect width="900" height="1200" fill="#fffaf0"/>
+  <rect x="48" y="48" width="804" height="1104" rx="28" fill="#fff4da" stroke="#202723" stroke-opacity=".16" stroke-width="3"/>
+  <circle cx="732" cy="180" r="92" fill="#2f725d" opacity=".18"/>
+  <circle cx="166" cy="940" r="130" fill="#d94d32" opacity=".14"/>
+  <text x="90" y="150" fill="#d94d32" font-size="38" font-weight="900" font-family="PingFang SC, Microsoft YaHei, sans-serif">饭桶研究所</text>
+  <text x="90" y="310" fill="#202723" font-size="92" font-weight="950" font-family="PingFang SC, Microsoft YaHei, sans-serif">测测你的</text>
+  <text x="90" y="420" fill="#202723" font-size="92" font-weight="950" font-family="PingFang SC, Microsoft YaHei, sans-serif">饭点人格</text>
+  <text x="90" y="560" fill="#47524c" font-size="40" font-weight="800" font-family="PingFang SC, Microsoft YaHei, sans-serif">早八 / 外卖 / 满减 / 夜宵</text>
+  <text x="90" y="650" fill="#a73524" font-size="46" font-weight="900" font-family="PingFang SC, Microsoft YaHei, sans-serif">离谱，但有点准</text>
+  <rect x="90" y="840" width="720" height="128" rx="18" fill="#d94d32"/>
+  <text x="130" y="922" fill="#fffaf0" font-size="48" font-weight="950" font-family="PingFang SC, Microsoft YaHei, sans-serif">FBI 饭桶行为识别系统</text>
+  <text x="90" y="1070" fill="#47524c" font-size="30" font-weight="800" font-family="PingFang SC, Microsoft YaHei, sans-serif">FBI = FanTong Behavior Identification</text>
+</svg>

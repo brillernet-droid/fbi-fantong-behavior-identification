@@ -22,7 +22,9 @@ export const types = [
     caution: "需要等位 90 分钟的网红店",
     risk: "高饥饿反应级",
     comment: "建议随身备一根能量棒，防止会议拖堂触发眼神预警。",
-    metrics: { impulse: 96, discount: 42, social: 48 }
+    metrics: { impulse: 96, discount: 42, social: 48 },
+    viralScore: 93,
+    shareLine: "我不是饿得快，我只是比饭点提前进入战斗状态。"
   },
   {
     id: "archive",
@@ -35,7 +37,9 @@ export const types = [
     caution: "只有套餐 A 和套餐 B 的极简店",
     risk: "中度纠结扩散级",
     comment: "研究所建议给你配一名同桌，职责是到点合上菜单。",
-    metrics: { impulse: 46, discount: 74, social: 58 }
+    metrics: { impulse: 46, discount: 74, social: 58 },
+    viralScore: 82,
+    shareLine: "别人点餐看菜单，我点餐先写一篇小店尽调。"
   },
   {
     id: "comfort",
@@ -48,7 +52,9 @@ export const types = [
     caution: "菜单每天变的实验厨房",
     risk: "低风险高依赖级",
     comment: "稳定不是保守，是你和胃部签订的长期战略协议。",
-    metrics: { impulse: 55, discount: 38, social: 40 }
+    metrics: { impulse: 55, discount: 38, social: 40 },
+    viralScore: 86,
+    shareLine: "小区门口那家店，才是我真正的情绪避难所。"
   },
   {
     id: "random",
@@ -61,7 +67,9 @@ export const types = [
     caution: "口味过于极端的隐藏菜单",
     risk: "波动惊喜级",
     comment: "研究所无法预测你，但可以确认你让饭点变得很有戏。",
-    metrics: { impulse: 82, discount: 51, social: 44 }
+    metrics: { impulse: 82, discount: 51, social: 44 },
+    viralScore: 84,
+    shareLine: "吃什么交给命运，吃不饱再怪命运。"
   },
   {
     id: "social",
@@ -74,7 +82,9 @@ export const types = [
     caution: "只能单人独享的小份料理",
     risk: "中高社交传染级",
     comment: "你不是在吃饭，你是在维护人类饭桌文明。",
-    metrics: { impulse: 68, discount: 63, social: 96 }
+    metrics: { impulse: 68, discount: 63, social: 96 },
+    viralScore: 91,
+    shareLine: "我不是在组织饭局，我是在维护群聊和平。"
   },
   {
     id: "solo",
@@ -87,7 +97,9 @@ export const types = [
     caution: "必须八个人起订的团餐",
     risk: "低干扰沉浸级",
     comment: "研究所尊重你的餐桌边界，并为最后一块肉保密。",
-    metrics: { impulse: 50, discount: 35, social: 18 }
+    metrics: { impulse: 50, discount: 35, social: 18 },
+    viralScore: 80,
+    shareLine: "一个人吃饭不是孤独，是给灵魂开静音模式。"
   },
   {
     id: "budget",
@@ -100,7 +112,9 @@ export const types = [
     caution: "无明码标价的随缘菜馆",
     risk: "精算过载级",
     comment: "你不是抠门，你是在进行碳水资产配置。",
-    metrics: { impulse: 54, discount: 98, social: 62 }
+    metrics: { impulse: 54, discount: 98, social: 62 },
+    viralScore: 98,
+    shareLine: "满减不是优惠，是我和平台之间的智力对局。"
   },
   {
     id: "premium",
@@ -113,7 +127,9 @@ export const types = [
     caution: "塑料袋里直接开吃",
     risk: "审美延迟级",
     comment: "建议继续保持，生活已经够忙，饭可以稍微隆重。",
-    metrics: { impulse: 61, discount: 34, social: 78 }
+    metrics: { impulse: 61, discount: 34, social: 78 },
+    viralScore: 88,
+    shareLine: "饭可以普通，但我发出来必须像今天过得不错。"
   },
   {
     id: "spicy",
@@ -126,7 +142,9 @@ export const types = [
     caution: "连续三天叠加极辣任务",
     risk: "红色预警级",
     comment: "研究所建议同步部署酸奶，不要让胃独自承担英雄主义。",
-    metrics: { impulse: 88, discount: 41, social: 64 }
+    metrics: { impulse: 88, discount: 41, social: 64 },
+    viralScore: 90,
+    shareLine: "微辣是礼貌，中辣是态度，特辣是嘴硬。"
   },
   {
     id: "clean",
@@ -139,7 +157,9 @@ export const types = [
     caution: "厚重奶油加双倍芝士",
     risk: "低负担稳定级",
     comment: "你像一键清理缓存，但比手机管家更会吃。",
-    metrics: { impulse: 38, discount: 33, social: 36 }
+    metrics: { impulse: 38, discount: 33, social: 36 },
+    viralScore: 76,
+    shareLine: "我吃清淡不是养生，是下午还要继续做人。"
   },
   {
     id: "carb",
@@ -152,7 +172,9 @@ export const types = [
     caution: "只有菜叶没有主食的局",
     risk: "满足感拉满级",
     comment: "研究所确认：碳水不是退路，是你今天继续前进的燃料。",
-    metrics: { impulse: 84, discount: 48, social: 42 }
+    metrics: { impulse: 84, discount: 48, social: 42 },
+    viralScore: 95,
+    shareLine: "没有碳水的人生，只能算低电量运行。"
   },
   {
     id: "protein",
@@ -165,7 +187,9 @@ export const types = [
     caution: "只有小菜和点心的下午茶局",
     risk: "高能量占有级",
     comment: "建议搭配一点蔬菜，给系统留出散热空间。",
-    metrics: { impulse: 78, discount: 39, social: 52 }
+    metrics: { impulse: 78, discount: 39, social: 52 },
+    viralScore: 87,
+    shareLine: "饭点没有硬菜，就像会议没有结论。"
   },
   {
     id: "late",
@@ -178,7 +202,9 @@ export const types = [
     caution: "临睡前暴击式重油重辣",
     risk: "夜间活跃级",
     comment: "研究所建议留一盏小灯，也给明天的自己留一条活路。",
-    metrics: { impulse: 91, discount: 44, social: 57 }
+    metrics: { impulse: 91, discount: 44, social: 57 },
+    viralScore: 97,
+    shareLine: "白天是打工人，晚上是夜宵复活甲持有人。"
   },
   {
     id: "early",
@@ -191,7 +217,9 @@ export const types = [
     caution: "空腹硬扛到午饭",
     risk: "晨间稳定级",
     comment: "你是研究所眼里罕见的启动规范样本。",
-    metrics: { impulse: 43, discount: 36, social: 34 }
+    metrics: { impulse: 43, discount: 36, social: 34 },
+    viralScore: 83,
+    shareLine: "早八不可怕，可怕的是早八还没吃早饭。"
   },
   {
     id: "indecisive",
@@ -204,7 +232,9 @@ export const types = [
     caution: "有 128 道菜的大菜单",
     risk: "高纠结滞留级",
     comment: "你不是没主见，你只是对每一种好吃都抱有基本尊重。",
-    metrics: { impulse: 49, discount: 67, social: 55 }
+    metrics: { impulse: 49, discount: 67, social: 55 },
+    viralScore: 96,
+    shareLine: "我不是没主见，我只是对每一种好吃都很尊重。"
   },
   {
     id: "leftover",
@@ -217,7 +247,9 @@ export const types = [
     caution: "需要新鲜现买所有材料的大菜",
     risk: "勤俭创造级",
     comment: "研究所认为你拥有把普通食材讲成连续剧的能力。",
-    metrics: { impulse: 52, discount: 86, social: 31 }
+    metrics: { impulse: 52, discount: 86, social: 31 },
+    viralScore: 79,
+    shareLine: "剩饭剩菜不是库存，是明天快乐的预告片。"
   }
 ];
 
