@@ -1,4 +1,5 @@
 import { REPORT_FIELD_LABELS } from "./data.js";
+import { buildLocalReportContent } from "./content-engine.js";
 
 export const METRIC_LABELS = {
   impulse: "干饭冲动值",
@@ -27,18 +28,18 @@ export function pickTypeFromAnswers(types, answers, seedText = "") {
   return winners[seed % winners.length];
 }
 
-export function buildReportFields(type, subject) {
+export function buildReportFields(type, subject, reportContent = buildLocalReportContent(type, subject)) {
   const values = [
     subject || "未署名饭桶",
     type.name,
     type.code,
-    type.judgment,
-    type.high,
-    type.recommended,
-    type.caution,
-    type.risk,
-    type.comment,
-    type.shareLine
+    reportContent.judgment,
+    reportContent.high,
+    reportContent.recommended,
+    reportContent.caution,
+    reportContent.risk,
+    reportContent.comment,
+    reportContent.shareLine
   ];
 
   const fields = REPORT_FIELD_LABELS.map((label, index) => ({
@@ -49,27 +50,30 @@ export function buildReportFields(type, subject) {
 
   fields.push({
     label: "传播金句",
-    value: type.shareLine,
+    value: reportContent.shareLine,
     wide: true
   });
 
   return fields;
 }
 
-export function buildPosterPayload(type, subject) {
+export function buildPosterPayload(type, subject, reportContent = buildLocalReportContent(type, subject)) {
   return {
     title: "【FBI 饭桶行为识别报告】",
     subtitle: "FanTong Behavior Identification",
     subject: subject || "未署名饭桶",
     typeName: type.name,
     code: type.code,
-    judgment: type.judgment,
-    recommended: type.recommended,
-    risk: type.risk,
-    shareLine: type.shareLine,
+    judgment: reportContent.judgment,
+    recommended: reportContent.recommended,
+    risk: reportContent.risk,
+    shareLine: reportContent.shareLine,
     viralScore: type.viralScore,
     metrics: type.metrics,
     metricLabels: METRIC_LABELS,
+    reportSource: reportContent.source,
+    reportFingerprint: reportContent.fingerprint,
+    confidence: reportContent.confidence,
     watermark: "生成自：饭桶研究所"
   };
 }

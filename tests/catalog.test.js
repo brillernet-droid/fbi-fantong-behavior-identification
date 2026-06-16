@@ -11,6 +11,14 @@ import {
   normalizeEmail,
   normalizeNickname
 } from "../auth.js";
+import {
+  buildLocalReportContent,
+  buildReportApiRequest,
+  getReportApiConfig,
+  isReportApiConfigured,
+  normalizeReportContent
+} from "../content-engine.js";
+import { FANTONG_CONFIG } from "../config.js";
 import { REPORT_FIELD_LABELS, mealModes, meals, questions, types } from "../data.js";
 import {
   METRIC_LABELS,
@@ -136,29 +144,36 @@ test("result scoring and report fields stay stable", () => {
   const answers = questions.map((question) => question.options[0].add);
   const scores = scoreAnswers(types, answers);
   const type = pickTypeFromAnswers(types, answers, "早八干饭人");
-  const fields = buildReportFields(type, "早八干饭人");
+  const content = buildLocalReportContent(type, "早八干饭人", answers, questions);
+  const fields = buildReportFields(type, "早八干饭人", content);
 
   assert.equal(Object.keys(scores).length, 16);
   assert.ok(type.id);
   assert.deepEqual(fields.slice(0, REPORT_FIELD_LABELS.length).map((field) => field.label), REPORT_FIELD_LABELS);
   assert.equal(fields[0].value, "早八干饭人");
+  assert.equal(fields[3].value, content.judgment);
   assert.equal(fields.at(-1).label, "传播金句");
   assert.equal(fields.length, 10);
 });
 
 test("poster payload is complete", () => {
   const type = types.find((item) => item.id === "budget");
-  const payload = buildPosterPayload(type, "满减观察员");
+  const answers = questions.map((question) => question.options[2].add);
+  const content = buildLocalReportContent(type, "满减观察员", answers, questions);
+  const payload = buildPosterPayload(type, "满减观察员", content);
 
   assert.equal(payload.title, "【FBI 饭桶行为识别报告】");
   assert.equal(payload.subject, "满减观察员");
   assert.equal(payload.typeName, type.name);
   assert.equal(payload.code, type.code);
-  assert.equal(payload.judgment, type.judgment);
-  assert.equal(payload.recommended, type.recommended);
-  assert.equal(payload.risk, type.risk);
-  assert.equal(payload.shareLine, type.shareLine);
+  assert.equal(payload.judgment, content.judgment);
+  assert.equal(payload.recommended, content.recommended);
+  assert.equal(payload.risk, content.risk);
+  assert.equal(payload.shareLine, content.shareLine);
   assert.equal(payload.viralScore, type.viralScore);
+  assert.equal(payload.reportSource, content.source);
+  assert.equal(payload.reportFingerprint, content.fingerprint);
+  assert.equal(payload.confidence, content.confidence);
   assert.equal(payload.watermark, "生成自：饭桶研究所");
   assert.deepEqual(payload.metrics, type.metrics);
   assert.deepEqual(payload.metricLabels, METRIC_LABELS);
@@ -166,6 +181,61 @@ test("poster payload is complete", () => {
   for (const value of Object.values(payload)) {
     if (typeof value === "string") assert.ok(value.trim());
   }
+});
+
+test("local report generator creates dynamic complete content", () => {
+  const type = types.find((item) => item.id === "indecisive");
+  const firstPath = questions.map((question) => question.options[0].add);
+  const secondPath = questions.map((question) => question.options[3].add);
+  const first = buildLocalReportContent(type, "选择困难样本", firstPath, questions);
+  const second = buildLocalReportContent(type, "选择困难样本", secondPath, questions);
+
+  assert.equal(first.source, "local-program");
+  assert.match(first.fingerprint, /^FT-D03-\d{4}$/);
+  assert.ok(first.confidence >= 0 && first.confidence <= 100);
+  assert.notEqual(first.fingerprint, second.fingerprint);
+
+  for (const field of ["judgment", "high", "recommended", "caution", "risk", "comment", "shareLine"]) {
+    assert.ok(first[field].trim(), `generated ${field} should not be empty`);
+  }
+
+  assert.ok(first.judgment.includes("选择困难样本"));
+  assert.ok(first.risk.includes("置信度"));
+});
+
+test("report API config and payload are public-endpoint only", () => {
+  const disabled = getReportApiConfig(FANTONG_CONFIG);
+  const enabled = getReportApiConfig({
+    reportApiEndpoint: "https://example.com/fantong-report",
+    reportApiTimeoutMs: 4500
+  });
+  const type = types.find((item) => item.id === "budget");
+  const request = buildReportApiRequest({
+    type,
+    subject: "满减观察员",
+    answers: questions.slice(0, 2).map((question) => question.options[0].add),
+    questions
+  });
+  const normalized = normalizeReportContent(
+    {
+      judgment: "  API 生成判断  ",
+      confidence: 101
+    },
+    buildLocalReportContent(type, "满减观察员")
+  );
+
+  assert.equal(isReportApiConfigured(disabled), false);
+  assert.equal(isReportApiConfigured(enabled), true);
+  assert.equal(enabled.reportApiTimeoutMs, 4500);
+  assert.equal(request.app, "饭桶研究所");
+  assert.equal(request.system, "FBI 饭桶行为识别系统");
+  assert.equal(request.constraints.noRealAgencyImitation, true);
+  assert.equal(request.answerPath.length, 2);
+  assert.equal(JSON.stringify(request).includes("service_role"), false);
+  assert.equal(JSON.stringify(request).includes("apiKey"), false);
+  assert.equal(normalized.judgment, "API 生成判断");
+  assert.equal(normalized.confidence, 100);
+  assert.ok(normalized.high.trim());
 });
 
 test("leaderboard ranks by viral score", async () => {
@@ -222,7 +292,11 @@ test("archive helpers validate email otp and payload", () => {
     nickname: "  满减 观察员  ",
     subject: "满减观察员",
     type,
-    answers: questions.slice(0, 2).map((question) => question.options[0].add)
+    answers: questions.slice(0, 2).map((question) => question.options[0].add),
+    reportContent: {
+      risk: "精算过载级 · 置信度 91%",
+      shareLine: "满减观察员正在和平台进行智力对局。"
+    }
   });
 
   assert.equal(normalizeEmail(" FanTong@Example.COM "), "fantong@example.com");
@@ -237,7 +311,8 @@ test("archive helpers validate email otp and payload", () => {
   assert.equal(record.nickname, "满减 观察员");
   assert.equal(record.type_id, type.id);
   assert.equal(record.type_code, type.code);
-  assert.equal(record.share_line, type.shareLine);
+  assert.equal(record.risk, "精算过载级 · 置信度 91%");
+  assert.equal(record.share_line, "满减观察员正在和平台进行智力对局。");
   assert.deepEqual(record.metrics, type.metrics);
   assert.equal(record.answers.length, 2);
 

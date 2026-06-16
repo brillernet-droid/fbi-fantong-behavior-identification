@@ -1,4 +1,5 @@
 import { mealModes, meals, questions, types } from "./data.js";
+import { generateReportContent } from "./content-engine.js";
 import {
   buildArchiveRecord,
   createArchiveClient,
@@ -27,6 +28,7 @@ const appState = {
   currentType: null,
   currentPosterPayload: null,
   currentPosterUrl: null,
+  currentReportContent: null,
   currentMealModeId: "all",
   currentMealDecision: null,
   lastMealId: "",
@@ -70,6 +72,7 @@ const questionText = document.querySelector("#questionText");
 const optionsGrid = document.querySelector("#optionsGrid");
 const metricsPanel = document.querySelector("#metricsPanel");
 const reportFields = document.querySelector("#reportFields");
+const reportStamp = document.querySelector("#reportStamp");
 const posterStatus = document.querySelector("#posterStatus");
 const posterPreviewWrap = document.querySelector("#posterPreviewWrap");
 const posterPreview = document.querySelector("#posterPreview");
@@ -113,6 +116,7 @@ function startQuiz() {
   appState.answers = [];
   appState.currentType = null;
   appState.currentPosterPayload = null;
+  appState.currentReportContent = null;
   sampleStatus.textContent = "饭点信号采集中，疑似早八/加班/夜宵样本";
   setScreen("quiz");
   renderQuestion();
@@ -146,7 +150,7 @@ function renderQuestion() {
   );
 }
 
-function selectOption(option) {
+async function selectOption(option) {
   appState.answers[appState.index] = option.add;
 
   if (appState.index < questions.length - 1) {
@@ -155,7 +159,8 @@ function selectOption(option) {
     return;
   }
 
-  renderReport();
+  sampleStatus.textContent = "饭桶研究所正在生成内部行为报告";
+  await renderReport();
   setScreen("result");
 }
 
@@ -324,7 +329,8 @@ async function verifyAndSaveArchive() {
       nickname: archiveNickname.value,
       subject: appState.currentPosterPayload.subject,
       type: appState.currentType,
-      answers: appState.answers
+      answers: appState.answers,
+      reportContent: appState.currentReportContent
     });
     const { data: savedArchive, error: saveError } = await service.saveArchive(record);
     if (saveError) throw saveError;
@@ -340,12 +346,28 @@ async function verifyAndSaveArchive() {
   }
 }
 
-function renderReport() {
+async function renderReport() {
   const type = pickType();
   const subject = subjectName.value.trim() || "未署名饭桶";
-  const fields = buildReportFields(type, subject);
+  const reportContent = await generateReportContent(
+    {
+      type,
+      subject,
+      answers: appState.answers,
+      questions
+    },
+    FANTONG_CONFIG
+  );
+  const fields = buildReportFields(type, subject, reportContent);
   appState.currentType = type;
-  appState.currentPosterPayload = buildPosterPayload(type, subject);
+  appState.currentReportContent = reportContent;
+  appState.currentPosterPayload = buildPosterPayload(type, subject, reportContent);
+  reportStamp.textContent =
+    reportContent.source === "api"
+      ? "API 动态生成"
+      : reportContent.source === "api-fallback"
+        ? "API 回落生成"
+        : "程序动态生成";
   posterStatus.textContent = "";
   clearPosterPreview();
   renderMetrics(type.metrics);

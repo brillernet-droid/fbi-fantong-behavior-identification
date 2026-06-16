@@ -42,7 +42,7 @@ export function isValidOtp(token) {
   return /^\d{6}$/.test(String(token || "").trim());
 }
 
-export function buildArchiveRecord({ userId, email, nickname, subject, type, answers }) {
+export function buildArchiveRecord({ userId, email, nickname, subject, type, answers, reportContent }) {
   return {
     user_id: userId,
     email: normalizeEmail(email),
@@ -51,8 +51,8 @@ export function buildArchiveRecord({ userId, email, nickname, subject, type, ans
     type_id: type.id,
     type_name: type.name,
     type_code: type.code,
-    risk: type.risk,
-    share_line: type.shareLine,
+    risk: reportContent?.risk || type.risk,
+    share_line: reportContent?.shareLine || type.shareLine,
     metrics: { ...type.metrics },
     answers: answers.map((answer) => [...answer]),
     source: "fbi-fantong-behavior-identification"
