@@ -332,6 +332,7 @@ input:focus-visible,
 
 .quiz-screen,
 .result-screen,
+.meal-tool-section,
 .leaderboard-section,
 .archive-section,
 .lab-note {
@@ -516,6 +517,51 @@ input:focus-visible,
   border-color: rgba(217, 77, 50, 0.72);
   background: #fff4da;
   box-shadow: inset 0 0 0 2px rgba(217, 77, 50, 0.12);
+}
+
+.meal-tool-section {
+  background:
+    linear-gradient(135deg, rgba(216, 155, 35, 0.16), transparent 34%),
+    linear-gradient(315deg, rgba(47, 114, 93, 0.12), transparent 38%),
+    #fffaf0;
+}
+
+.meal-tool-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+  gap: 22px;
+  align-items: center;
+}
+
+.meal-tool-panel {
+  display: grid;
+  gap: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 22px;
+  background: #fffdf7;
+  box-shadow: 0 16px 34px rgba(32, 39, 35, 0.1);
+}
+
+.meal-tool-panel b,
+.meal-meta {
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.meal-tool-panel strong {
+  display: block;
+  margin: 8px 0;
+  color: var(--tomato-dark);
+  font-size: 32px;
+  line-height: 1.1;
+}
+
+.meal-tool-panel span {
+  display: block;
+  color: var(--ink-soft);
+  line-height: 1.65;
 }
 
 .archive-section {
@@ -866,6 +912,47 @@ input:focus-visible,
   line-height: 1;
 }
 
+.meal-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.meal-mode-btn {
+  min-height: 78px;
+  border: 1px solid rgba(32, 39, 35, 0.16);
+  border-radius: 8px;
+  padding: 10px;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  background: #fffdf7;
+}
+
+.meal-mode-btn strong,
+.meal-mode-btn span {
+  display: block;
+}
+
+.meal-mode-btn strong {
+  margin-bottom: 5px;
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.meal-mode-btn span {
+  color: var(--ink-soft);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.meal-mode-btn.is-active {
+  border-color: rgba(217, 77, 50, 0.72);
+  background: var(--paper-strong);
+  box-shadow: inset 0 0 0 2px rgba(217, 77, 50, 0.1);
+}
+
 .archive-intro {
   margin-bottom: 16px;
   color: var(--ink-soft);
@@ -977,8 +1064,19 @@ input:focus-visible,
   padding: 16px 0 16px 16px;
 }
 
+.meal-result small,
 .meal-result strong {
   display: block;
+}
+
+.meal-result small {
+  margin-bottom: 10px;
+  color: var(--soy-dark);
+  font-weight: 900;
+  line-height: 1.45;
+}
+
+.meal-result strong {
   margin-bottom: 8px;
   color: var(--tomato-dark);
   font-size: 28px;
@@ -989,6 +1087,20 @@ input:focus-visible,
   display: block;
   color: var(--ink-soft);
   line-height: 1.7;
+}
+
+.meal-result em {
+  display: block;
+  margin-top: 10px;
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 850;
+  line-height: 1.55;
+}
+
+.meal-meta {
+  margin: -8px 0 18px;
+  line-height: 1.55;
 }
 
 [hidden] {
@@ -1020,6 +1132,7 @@ input:focus-visible,
   }
 
   .quiz-layout,
+  .meal-tool-layout,
   .note-wrap {
     grid-template-columns: 1fr;
   }
@@ -1080,6 +1193,7 @@ input:focus-visible,
 
   .quiz-screen,
   .result-screen,
+  .meal-tool-section,
   .leaderboard-section,
   .archive-section,
   .lab-note {
@@ -1089,6 +1203,7 @@ input:focus-visible,
   .options-grid,
   .report-fields,
   .metrics-panel,
+  .meal-mode-grid,
   .archive-benefits,
   .archive-form-grid,
   .leaderboard-grid,

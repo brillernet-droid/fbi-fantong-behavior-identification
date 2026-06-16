@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>饭桶研究所 | 中国饭点行为识别小测试</title>
+    <title>饭桶研究所 | 饭点行为识别与吃啥决策系统</title>
     <meta
       name="description"
-      content="饭桶研究所出品的 FBI 饭桶行为识别系统，识别早八、外卖满减、拼单、夜宵和选择困难等中国饭点行为。"
+      content="饭桶研究所出品的 FBI 饭桶行为识别系统和饭点决策系统，识别早八、满减、夜宵和选择困难，并直接决定今天吃啥。"
     />
     <meta name="theme-color" content="#d94d32" />
     <link rel="canonical" href="https://brillernet-droid.github.io/fbi-fantong-behavior-identification/" />
@@ -16,7 +16,7 @@
     <meta property="og:title" content="饭桶研究所 | FBI 饭桶行为识别系统" />
     <meta
       property="og:description"
-      content="测测你的早八、外卖满减、拼单、夜宵和干饭行为，会被饭桶研究所识别成哪一型。"
+      content="测测你是哪种饭桶行为类型，也让饭桶研究所直接帮你决定今天吃啥。"
     />
     <meta
       property="og:image"
@@ -36,6 +36,7 @@
         </a>
         <nav class="topnav" aria-label="主导航">
           <a href="#home">开测</a>
+          <a href="#meal-tool">吃啥</a>
           <a href="#leaderboard">热度榜</a>
           <a href="#archive">16 型档案</a>
           <a href="#lab-note">说明</a>
@@ -54,7 +55,7 @@
             <p class="eyebrow">饭桶研究所 · 中国饭点样本组</p>
             <h1>FBI 饭桶行为识别系统</h1>
             <p class="hero-copy">
-              从早八豆浆到下班外卖，从满减纠结到夜宵复活。FBI = FanTong Behavior Identification。
+              先识别你是哪种饭桶，再把今天吃啥拍板。从早八豆浆到下班外卖，FBI = FanTong Behavior Identification。
             </p>
             <div class="hero-actions" aria-label="首页操作">
               <button class="btn btn-primary" id="startTest" type="button">启动 FBI 识别</button>
@@ -64,6 +65,24 @@
             <p class="reject-notice" id="rejectNotice" role="status" aria-live="polite" hidden>
               拒绝无效。饭点行为已经暴露。
             </p>
+          </div>
+        </section>
+
+        <section class="meal-tool-section" id="meal-tool">
+          <div class="section-wrap meal-tool-layout">
+            <div class="screen-heading">
+              <p class="eyebrow">饭桶研究所 · 饭点决策系统</p>
+              <h2>今天吃啥，不再开会</h2>
+              <p>按早八、打工午饭、下班回血、夜宵、省钱和聚餐场景直接拍板。纠结可以，饿着不行。</p>
+            </div>
+            <div class="meal-tool-panel">
+              <div>
+                <b>当前模式</b>
+                <strong id="homeMealMode">随便救我</strong>
+                <span id="homeMealSummary">选择权交给研究所，今天先把饭吃上。</span>
+              </div>
+              <button class="btn btn-primary" id="openMealTool" type="button">打开饭点决策系统</button>
+            </div>
           </div>
         </section>
 
@@ -232,11 +251,14 @@
     <dialog class="meal-dialog" id="mealDialog" aria-labelledby="mealTitle">
       <form method="dialog">
         <button class="dialog-close" value="close" aria-label="关闭">×</button>
-        <p class="eyebrow">饭桶研究所 · 今日吃啥指令</p>
+        <p class="eyebrow">饭桶研究所 · 饭点决策系统</p>
         <h2 id="mealTitle">系统正在拍桌决定</h2>
+        <div class="meal-mode-grid" id="mealModeGrid" aria-label="饭点场景"></div>
         <div class="meal-result" id="mealResult"></div>
+        <p class="meal-meta" id="mealMeta"></p>
         <div class="dialog-actions">
           <button class="btn btn-secondary" id="rerollMeal" type="button">换一个</button>
+          <button class="btn btn-light" id="copyMeal" type="button">复制饭点指令</button>
           <button class="btn btn-primary" value="close">收到，开吃</button>
         </div>
       </form>

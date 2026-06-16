@@ -11,8 +11,17 @@ import {
   normalizeEmail,
   normalizeNickname
 } from "../auth.js";
-import { REPORT_FIELD_LABELS, meals, questions, types } from "../data.js";
-import { METRIC_LABELS, buildPosterPayload, buildReportFields, pickTypeFromAnswers, scoreAnswers } from "../logic.js";
+import { REPORT_FIELD_LABELS, mealModes, meals, questions, types } from "../data.js";
+import {
+  METRIC_LABELS,
+  buildMealDecision,
+  buildPosterPayload,
+  buildReportFields,
+  filterMealsByMode,
+  pickMealForMode,
+  pickTypeFromAnswers,
+  scoreAnswers
+} from "../logic.js";
 
 const REQUIRED_TYPE_FIELDS = [
   "id",
@@ -87,7 +96,7 @@ test("questions are valid and every type is reachable", () => {
 });
 
 test("copywriting uses local Chinese meal context without agency imitation", () => {
-  const text = JSON.stringify({ types, questions, meals });
+  const text = JSON.stringify({ types, questions, mealModes, meals });
 
   for (const marker of LOCAL_MARKERS) {
     assert.ok(text.includes(marker), `missing local marker: ${marker}`);
@@ -98,12 +107,28 @@ test("copywriting uses local Chinese meal context without agency imitation", () 
   }
 });
 
-test("meal suggestions are varied and non-empty", () => {
+test("meal decision catalog is varied and mode-ready", () => {
   assert.ok(meals.length >= 24);
+  assert.ok(mealModes.length >= 8);
+  const mealIds = new Set();
 
   for (const meal of meals) {
+    assert.ok(meal.id.trim());
     assert.ok(meal.name.trim());
     assert.ok(meal.reason.trim());
+    assert.ok(meal.caution.trim());
+    assert.ok(Array.isArray(meal.tags));
+    assert.ok(meal.tags.length >= 3);
+    assert.equal(mealIds.has(meal.id), false, `duplicate meal id: ${meal.id}`);
+    mealIds.add(meal.id);
+  }
+
+  for (const mode of mealModes) {
+    assert.ok(mode.id.trim());
+    assert.ok(mode.label.trim());
+    assert.ok(mode.summary.trim());
+    assert.ok(Array.isArray(mode.tags));
+    assert.ok(filterMealsByMode(meals, mode).length > 0, `mode has no meal candidates: ${mode.id}`);
   }
 });
 
@@ -152,6 +177,21 @@ test("leaderboard ranks by viral score", async () => {
     assert.ok(leaders[index - 1].viralScore >= leaders[index].viralScore);
   }
   assert.equal(leaders[0].id, "budget");
+});
+
+test("meal decision payload is complete", () => {
+  const { meal, mode, poolSize } = pickMealForMode(meals, mealModes, "breakfast", 1);
+  const decision = buildMealDecision(meal, mode, poolSize);
+
+  assert.ok(poolSize > 0);
+  assert.equal(mode.id, "breakfast");
+  assert.ok(meal.tags.some((tag) => mode.tags.includes(tag)));
+  assert.equal(decision.title, "饭点决策系统");
+  assert.equal(decision.modeLabel, mode.label);
+  assert.equal(decision.mealName, meal.name);
+  assert.ok(decision.command.includes(meal.name));
+  assert.ok(decision.caution.trim());
+  assert.ok(decision.meta.includes(String(poolSize)));
 });
 
 test("archive config defaults to disabled without private keys", async () => {

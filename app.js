@@ -1,4 +1,4 @@
-import { meals, questions, types } from "./data.js";
+import { mealModes, meals, questions, types } from "./data.js";
 import {
   buildArchiveRecord,
   createArchiveClient,
@@ -10,7 +10,16 @@ import {
   normalizeNickname
 } from "./auth.js";
 import { FANTONG_CONFIG } from "./config.js";
-import { METRIC_LABELS, buildLeaderboard, buildPosterPayload, buildReportFields, pickTypeFromAnswers } from "./logic.js";
+import {
+  METRIC_LABELS,
+  buildLeaderboard,
+  buildMealDecision,
+  buildPosterPayload,
+  buildReportFields,
+  findMealMode,
+  pickMealForMode,
+  pickTypeFromAnswers
+} from "./logic.js";
 
 const appState = {
   index: 0,
@@ -18,6 +27,9 @@ const appState = {
   currentType: null,
   currentPosterPayload: null,
   currentPosterUrl: null,
+  currentMealModeId: "all",
+  currentMealDecision: null,
+  lastMealId: "",
   archiveClientPromise: null,
   archiveCooldownTimer: null
 };
@@ -40,6 +52,9 @@ const startTest = document.querySelector("#startTest");
 const rejectBtn = document.querySelector("#rejectBtn");
 const rejectNotice = document.querySelector("#rejectNotice");
 const decideMeal = document.querySelector("#decideMeal");
+const openMealTool = document.querySelector("#openMealTool");
+const homeMealMode = document.querySelector("#homeMealMode");
+const homeMealSummary = document.querySelector("#homeMealSummary");
 const mealFromResult = document.querySelector("#mealFromResult");
 const restartBtn = document.querySelector("#restartBtn");
 const posterBtn = document.querySelector("#posterBtn");
@@ -62,8 +77,11 @@ const leaderboardGrid = document.querySelector("#leaderboardGrid");
 const typeGrid = document.querySelector("#typeGrid");
 const mealDialog = document.querySelector("#mealDialog");
 const mealTitle = document.querySelector("#mealTitle");
+const mealModeGrid = document.querySelector("#mealModeGrid");
 const mealResult = document.querySelector("#mealResult");
+const mealMeta = document.querySelector("#mealMeta");
 const rerollMeal = document.querySelector("#rerollMeal");
+const copyMeal = document.querySelector("#copyMeal");
 const archiveDialog = document.querySelector("#archiveDialog");
 const archiveForm = document.querySelector("#archiveForm");
 const archiveNickname = document.querySelector("#archiveNickname");
@@ -585,14 +603,39 @@ function showRejectNotice() {
   window.requestAnimationFrame(() => rejectNotice.classList.add("is-hot"));
 }
 
-function pickMeal() {
-  const meal = meals[Math.floor(Math.random() * meals.length)];
-  mealTitle.textContent = "今日饭点判定";
-  mealResult.innerHTML = `<strong>${meal.name}</strong><span>${meal.reason}</span>`;
+function setMealMode(modeId) {
+  const mode = findMealMode(mealModes, modeId);
+  appState.currentMealModeId = mode.id;
+  homeMealMode.textContent = mode.label;
+  homeMealSummary.textContent = mode.summary;
+
+  [...mealModeGrid.querySelectorAll(".meal-mode-btn")].forEach((button) => {
+    const active = button.dataset.modeId === mode.id;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
 }
 
-function openMealDialog() {
-  pickMeal();
+function pickMeal(modeId = appState.currentMealModeId) {
+  const seed = Date.now() + Math.floor(Math.random() * 1000);
+  const { meal, mode, poolSize } = pickMealForMode(meals, mealModes, modeId, seed, appState.lastMealId);
+  const decision = buildMealDecision(meal, mode, poolSize);
+  appState.lastMealId = meal.id;
+  appState.currentMealDecision = decision;
+  setMealMode(mode.id);
+  mealTitle.textContent = decision.title;
+  mealResult.innerHTML = `
+    <small>${decision.command}</small>
+    <strong>${decision.mealName}</strong>
+    <span>${decision.reason}</span>
+    <em>慎选提醒：${decision.caution}</em>
+  `;
+  mealMeta.textContent = `${decision.modeSummary}｜${decision.meta}`;
+  copyMeal.textContent = "复制饭点指令";
+}
+
+function openMealDialog(modeId = "all") {
+  pickMeal(modeId);
   if (typeof mealDialog.showModal === "function") {
     mealDialog.showModal();
     return;
@@ -601,11 +644,62 @@ function openMealDialog() {
   mealDialog.setAttribute("open", "");
 }
 
+function copyTextWithFallback(text) {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.top = "0";
+  textarea.style.left = "-9999px";
+  document.body.append(textarea);
+  textarea.select();
+
+  const copied = document.execCommand("copy");
+  textarea.remove();
+  if (!copied) throw new Error("Clipboard copy failed");
+}
+
+async function copyMealDecision() {
+  const decision = appState.currentMealDecision;
+  if (!decision) return;
+  const text = `${decision.command}\n${decision.reason}\n慎选提醒：${decision.caution}\n生成自：饭桶研究所`;
+
+  try {
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
+      await navigator.clipboard.writeText(text);
+    } catch {
+      copyTextWithFallback(text);
+    }
+    copyMeal.textContent = "已复制";
+  } catch {
+    copyMeal.textContent = "长按复制";
+  }
+}
+
+function renderMealModes() {
+  mealModeGrid.replaceChildren(
+    ...mealModes.map((mode) => {
+      const button = document.createElement("button");
+      button.className = "meal-mode-btn";
+      button.type = "button";
+      button.dataset.modeId = mode.id;
+      button.setAttribute("aria-pressed", "false");
+      button.innerHTML = `<strong>${mode.label}</strong><span>${mode.summary}</span>`;
+      button.addEventListener("click", () => pickMeal(mode.id));
+      return button;
+    })
+  );
+  setMealMode(appState.currentMealModeId);
+}
+
 startTest.addEventListener("click", startQuiz);
 rejectBtn.addEventListener("click", showRejectNotice);
-decideMeal.addEventListener("click", openMealDialog);
-mealFromResult.addEventListener("click", openMealDialog);
-rerollMeal.addEventListener("click", pickMeal);
+decideMeal.addEventListener("click", () => openMealDialog("all"));
+openMealTool.addEventListener("click", () => openMealDialog(appState.currentMealModeId));
+mealFromResult.addEventListener("click", () => openMealDialog(appState.currentType?.id === "late" ? "late" : "all"));
+rerollMeal.addEventListener("click", () => pickMeal(appState.currentMealModeId));
+copyMeal.addEventListener("click", copyMealDecision);
 restartBtn.addEventListener("click", startQuiz);
 saveArchiveBtn.addEventListener("click", openArchiveDialog);
 sendArchiveCode.addEventListener("click", sendArchiveOtp);
@@ -624,3 +718,4 @@ backBtn.addEventListener("click", goBack);
 
 renderArchive();
 renderLeaderboard();
+renderMealModes();

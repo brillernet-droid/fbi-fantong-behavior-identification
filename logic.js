@@ -77,3 +77,37 @@ export function buildPosterPayload(type, subject) {
 export function buildLeaderboard(types, limit = 6) {
   return [...types].sort((a, b) => b.viralScore - a.viralScore).slice(0, limit);
 }
+
+export function findMealMode(mealModes, modeId = "all") {
+  return mealModes.find((mode) => mode.id === modeId) || mealModes[0];
+}
+
+export function filterMealsByMode(meals, mode) {
+  if (!mode?.tags?.length) return meals;
+  const tags = new Set(mode.tags);
+  const matched = meals.filter((meal) => meal.tags.some((tag) => tags.has(tag)));
+  return matched.length ? matched : meals;
+}
+
+export function pickMealForMode(meals, mealModes, modeId = "all", seed = Date.now(), previousMealId = "") {
+  const mode = findMealMode(mealModes, modeId);
+  const pool = filterMealsByMode(meals, mode);
+  const nextPool = pool.length > 1 ? pool.filter((meal) => meal.id !== previousMealId) : pool;
+  const index = Math.abs(Math.floor(seed)) % nextPool.length;
+  const meal = nextPool[index];
+
+  return { meal, mode, poolSize: pool.length };
+}
+
+export function buildMealDecision(meal, mode, poolSize = 0) {
+  return {
+    title: "饭点决策系统",
+    modeLabel: mode.label,
+    modeSummary: mode.summary,
+    mealName: meal.name,
+    reason: meal.reason,
+    caution: meal.caution,
+    command: `【${mode.label}】今日建议：${meal.name}`,
+    meta: `已从 ${poolSize} 个候选饭点方案中拍板`
+  };
+}

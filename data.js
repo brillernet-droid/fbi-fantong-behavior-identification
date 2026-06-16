@@ -328,29 +328,230 @@ export const questions = [
   }
 ];
 
+export const mealModes = [
+  {
+    id: "all",
+    label: "随便救我",
+    summary: "选择权交给研究所，今天先把饭吃上。",
+    tags: []
+  },
+  {
+    id: "breakfast",
+    label: "早八续航",
+    summary: "适合刚开机、赶地铁、上午不能崩的样本。",
+    tags: ["breakfast", "quick", "light"]
+  },
+  {
+    id: "workday",
+    label: "打工午饭",
+    summary: "适合会议夹缝、午休有限、下午还要继续做人。",
+    tags: ["lunch", "workday", "stable"]
+  },
+  {
+    id: "afterwork",
+    label: "下班回血",
+    summary: "适合把今天从工位上领回来，好好吃一顿。",
+    tags: ["dinner", "comfort", "protein"]
+  },
+  {
+    id: "late",
+    label: "夜宵复活",
+    summary: "适合深夜系统重启，但不要把明天一起吃掉。",
+    tags: ["late", "warm", "spicy"]
+  },
+  {
+    id: "budget",
+    label: "省钱满减",
+    summary: "适合红包、团购、凑单和理性碳水资产配置。",
+    tags: ["budget", "value", "delivery"]
+  },
+  {
+    id: "light",
+    label: "清爽一点",
+    summary: "适合想吃，但不想饭后进入低电量模式。",
+    tags: ["light", "warm", "clean"]
+  },
+  {
+    id: "social",
+    label: "朋友聚餐",
+    summary: "适合群聊已经开会，但没人敢拍板的局。",
+    tags: ["social", "share", "dinner"]
+  },
+  {
+    id: "indecisive",
+    label: "选择困难",
+    summary: "适合菜单看了二十分钟，最后仍想外包决定权。",
+    tags: ["random", "stable", "quick"]
+  }
+];
+
 export const meals = [
-  { name: "番茄牛腩饭", reason: "酸甜稳场，肉量负责，适合假装今天一切可控。" },
-  { name: "葱油拌面加煎蛋", reason: "决策成本低，快乐回报高，研究所给出快速通过。" },
-  { name: "麻辣烫少点神秘丸子", reason: "自由组合但别太放飞，给明天的自己留一点余地。" },
-  { name: "烤鸡腿便当", reason: "主菜明确，碳水在场，系统判断为高完成度摄入。" },
-  { name: "虾仁炒饭配紫菜汤", reason: "冰箱清仓型友好，也适合所有需要被热饭安慰的人。" },
-  { name: "菌菇鸡汤米线", reason: "热汤能把混乱按回座位，适合轻微灵魂掉线。" },
-  { name: "牛肉粉加青菜", reason: "硬菜和清爽同时在线，属于饭桶研究所平衡样本。" },
-  { name: "小火锅单人局", reason: "不需要组局审批，一个人也能把仪式感煮开。" },
-  { name: "黄焖鸡米饭", reason: "稳定、热乎、有汤汁，是打工日的标准修复包。" },
-  { name: "煎饼果子加里脊", reason: "适合早八紧急启动，边走边吃也不耽误人生。" },
-  { name: "麻辣香锅微辣", reason: "选择权交给夹子，快乐交给锅气，但辣度别太逞强。" },
-  { name: "广式早茶拼盘", reason: "适合把普通一天开成慢一点的局，研究所批准喝茶续航。" },
-  { name: "奶茶加小料", reason: "不算正餐，但很适合给下午三点的灵魂续一口电。" },
-  { name: "猪脚饭加青菜", reason: "胶质和米饭同时到岗，适合把疲惫按回工位。" },
-  { name: "酸辣粉加肥牛", reason: "酸、辣、热、快，一碗解决今日精神低电量。" },
-  { name: "煲仔饭双腊味", reason: "锅巴负责仪式感，腊味负责让午休变得有盼头。" },
-  { name: "水饺配紫菜蛋花汤", reason: "稳定得像家里人发来的语音，适合需要被照顾的饭点。" },
-  { name: "手抓饼加鸡柳", reason: "移动端干饭方案，适合赶路、赶会、赶人生。" },
-  { name: "重庆小面少辣", reason: "有劲但不失控，适合想清醒一点又不想太清淡。" },
-  { name: "砂锅土豆粉", reason: "热气一上来，很多烦恼会暂时退出会议。" },
-  { name: "卤肉饭配卤蛋", reason: "肉汁、米饭、卤蛋三方会谈，结论通常是可以再来一口。" },
-  { name: "便利店关东煮", reason: "适合下班路上的临时修复，不隆重，但很会救场。" },
-  { name: "炒河粉加豆芽", reason: "锅气像饭点烟花，适合奖励今天没有乱发脾气的自己。" },
-  { name: "皮蛋瘦肉粥配油条", reason: "温和但不寡淡，适合系统需要软启动的早晨。" }
+  {
+    id: "tomato-beef-rice",
+    name: "番茄牛腩饭",
+    reason: "酸甜稳场，肉量负责，适合假装今天一切可控。",
+    caution: "如果今天已经很撑，米饭可以少半份。",
+    tags: ["lunch", "dinner", "comfort", "protein", "stable"]
+  },
+  {
+    id: "scallion-noodle-egg",
+    name: "葱油拌面加煎蛋",
+    reason: "决策成本低，快乐回报高，研究所给出快速通过。",
+    caution: "别忘了配点水，葱油香归香，嘴也是真的会干。",
+    tags: ["quick", "budget", "stable", "lunch", "value"]
+  },
+  {
+    id: "malatang-light",
+    name: "麻辣烫少点神秘丸子",
+    reason: "自由组合但别太放飞，给明天的自己留一点余地。",
+    caution: "研究所建议少拿两种看不懂的丸子。",
+    tags: ["random", "spicy", "delivery", "lunch", "dinner"]
+  },
+  {
+    id: "chicken-bento",
+    name: "烤鸡腿便当",
+    reason: "主菜明确，碳水在场，系统判断为高完成度摄入。",
+    caution: "如果下午要开会，酱汁别全倒。",
+    tags: ["workday", "lunch", "protein", "stable", "delivery"]
+  },
+  {
+    id: "shrimp-fried-rice",
+    name: "虾仁炒饭配紫菜汤",
+    reason: "冰箱清仓型友好，也适合所有需要被热饭安慰的人。",
+    caution: "汤别省，炒饭需要一个温柔收尾。",
+    tags: ["leftover", "comfort", "warm", "budget", "stable"]
+  },
+  {
+    id: "mushroom-chicken-rice-noodle",
+    name: "菌菇鸡汤米线",
+    reason: "热汤能把混乱按回座位，适合轻微灵魂掉线。",
+    caution: "别点太烫就硬喝，系统会判定你嘴硬。",
+    tags: ["warm", "light", "clean", "dinner", "comfort"]
+  },
+  {
+    id: "beef-noodle-greens",
+    name: "牛肉粉加青菜",
+    reason: "硬菜和清爽同时在线，属于饭桶研究所平衡样本。",
+    caution: "加辣可以，但别把平衡样本改成冒险样本。",
+    tags: ["protein", "clean", "lunch", "warm", "stable"]
+  },
+  {
+    id: "solo-hotpot",
+    name: "小火锅单人局",
+    reason: "不需要组局审批，一个人也能把仪式感煮开。",
+    caution: "睡前两小时内慎重开启重辣锅底。",
+    tags: ["solo", "comfort", "dinner", "warm", "late"]
+  },
+  {
+    id: "braised-chicken-rice",
+    name: "黄焖鸡米饭",
+    reason: "稳定、热乎、有汤汁，是打工日的标准修复包。",
+    caution: "土豆和米饭会联合让你午后变慢。",
+    tags: ["workday", "lunch", "delivery", "stable", "comfort"]
+  },
+  {
+    id: "jianbing-chicken",
+    name: "煎饼果子加里脊",
+    reason: "适合早八紧急启动，边走边吃也不耽误人生。",
+    caution: "通勤路上吃请注意包装结构稳定性。",
+    tags: ["breakfast", "quick", "budget", "value"]
+  },
+  {
+    id: "dry-hotpot-mild",
+    name: "麻辣香锅微辣",
+    reason: "选择权交给夹子，快乐交给锅气，但辣度别太逞强。",
+    caution: "微辣是建议，不是让你临场升级到特辣。",
+    tags: ["spicy", "social", "share", "dinner", "random"]
+  },
+  {
+    id: "dim-sum",
+    name: "广式早茶拼盘",
+    reason: "适合把普通一天开成慢一点的局，研究所批准喝茶续航。",
+    caution: "别在赶时间时点太多蒸笼，仪式感会反向追你。",
+    tags: ["breakfast", "social", "share", "light", "premium"]
+  },
+  {
+    id: "milk-tea-toppings",
+    name: "奶茶加小料",
+    reason: "不算正餐，但很适合给下午三点的灵魂续一口电。",
+    caution: "研究所提醒：这不是饭，最多算饭点外援。",
+    tags: ["quick", "premium", "budget", "random"]
+  },
+  {
+    id: "pork-trotter-rice",
+    name: "猪脚饭加青菜",
+    reason: "胶质和米饭同时到岗，适合把疲惫按回工位。",
+    caution: "青菜不是装饰，是系统散热模块。",
+    tags: ["protein", "workday", "lunch", "comfort", "value"]
+  },
+  {
+    id: "sour-spicy-noodle-beef",
+    name: "酸辣粉加肥牛",
+    reason: "酸、辣、热、快，一碗解决今日精神低电量。",
+    caution: "胃部状态一般时，别把酸辣都拉满。",
+    tags: ["spicy", "quick", "late", "warm", "random"]
+  },
+  {
+    id: "claypot-rice",
+    name: "煲仔饭双腊味",
+    reason: "锅巴负责仪式感，腊味负责让午休变得有盼头。",
+    caution: "等锅巴需要耐心，赶会样本慎选。",
+    tags: ["dinner", "comfort", "protein", "premium", "stable"]
+  },
+  {
+    id: "dumplings-soup",
+    name: "水饺配紫菜蛋花汤",
+    reason: "稳定得像家里人发来的语音，适合需要被照顾的饭点。",
+    caution: "蘸料别太重，今天走温柔路线。",
+    tags: ["comfort", "warm", "light", "stable", "budget"]
+  },
+  {
+    id: "grab-pancake",
+    name: "手抓饼加鸡柳",
+    reason: "移动端干饭方案，适合赶路、赶会、赶人生。",
+    caution: "边走边吃别加太多酱，衣服不是餐盘。",
+    tags: ["breakfast", "quick", "budget", "value"]
+  },
+  {
+    id: "chongqing-noodle",
+    name: "重庆小面少辣",
+    reason: "有劲但不失控，适合想清醒一点又不想太清淡。",
+    caution: "少辣已经够醒，别临时挑战系统上限。",
+    tags: ["breakfast", "quick", "spicy", "budget", "warm"]
+  },
+  {
+    id: "claypot-potato-noodle",
+    name: "砂锅土豆粉",
+    reason: "热气一上来，很多烦恼会暂时退出会议。",
+    caution: "刚端上来先等等，嘴不是耐热材料。",
+    tags: ["warm", "late", "comfort", "budget", "clean"]
+  },
+  {
+    id: "braised-pork-rice",
+    name: "卤肉饭配卤蛋",
+    reason: "肉汁、米饭、卤蛋三方会谈，结论通常是可以再来一口。",
+    caution: "如果还点奶茶，下午可能会进入慢速模式。",
+    tags: ["workday", "lunch", "protein", "stable", "comfort"]
+  },
+  {
+    id: "oden",
+    name: "便利店关东煮",
+    reason: "适合下班路上的临时修复，不隆重，但很会救场。",
+    caution: "它能救急，但别连续三天把它当正餐代表。",
+    tags: ["afterwork", "quick", "light", "warm", "budget"]
+  },
+  {
+    id: "fried-rice-noodle",
+    name: "炒河粉加豆芽",
+    reason: "锅气像饭点烟花，适合奖励今天没有乱发脾气的自己。",
+    caution: "油香很快乐，配杯无糖茶更像成年人。",
+    tags: ["dinner", "comfort", "budget", "value", "random"]
+  },
+  {
+    id: "congee-youtiao",
+    name: "皮蛋瘦肉粥配油条",
+    reason: "温和但不寡淡，适合系统需要软启动的早晨。",
+    caution: "油条是快乐插件，不建议无限安装。",
+    tags: ["breakfast", "light", "warm", "stable", "comfort"]
+  }
 ];
