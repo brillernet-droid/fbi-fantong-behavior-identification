@@ -1,6 +1,16 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
 
+import {
+  buildArchiveRecord,
+  getArchiveConfig,
+  isArchiveConfigured,
+  isValidEmail,
+  isValidOtp,
+  normalizeEmail,
+  normalizeNickname
+} from "../auth.js";
 import { REPORT_FIELD_LABELS, meals, questions, types } from "../data.js";
 import { METRIC_LABELS, buildPosterPayload, buildReportFields, pickTypeFromAnswers, scoreAnswers } from "../logic.js";
 
@@ -89,7 +99,7 @@ test("copywriting uses local Chinese meal context without agency imitation", () 
 });
 
 test("meal suggestions are varied and non-empty", () => {
-  assert.ok(meals.length >= 12);
+  assert.ok(meals.length >= 24);
 
   for (const meal of meals) {
     assert.ok(meal.name.trim());
@@ -142,4 +152,53 @@ test("leaderboard ranks by viral score", async () => {
     assert.ok(leaders[index - 1].viralScore >= leaders[index].viralScore);
   }
   assert.equal(leaders[0].id, "budget");
+});
+
+test("archive config defaults to disabled without private keys", async () => {
+  const config = getArchiveConfig();
+  const configured = getArchiveConfig({
+    supabaseUrl: "https://fantong-test.supabase.co",
+    supabaseAnonKey: "sb_publishable_abcdefghijklmnopqrstuvwxyz",
+    archiveTable: "custom_archives"
+  });
+  const configSource = await readFile(new URL("../config.js", import.meta.url), "utf8");
+
+  assert.equal(isArchiveConfigured(config), false);
+  assert.equal(isArchiveConfigured(configured), true);
+  assert.equal(config.archiveTable, "fantong_archives");
+  assert.equal(configured.archiveTable, "custom_archives");
+  assert.equal(configSource.includes("service_role"), false);
+  assert.equal(configSource.includes("sb_secret"), false);
+});
+
+test("archive helpers validate email otp and payload", () => {
+  const type = types.find((item) => item.id === "budget");
+  const record = buildArchiveRecord({
+    userId: "00000000-0000-4000-8000-000000000000",
+    email: " FanTong@Example.COM ",
+    nickname: "  满减 观察员  ",
+    subject: "满减观察员",
+    type,
+    answers: questions.slice(0, 2).map((question) => question.options[0].add)
+  });
+
+  assert.equal(normalizeEmail(" FanTong@Example.COM "), "fantong@example.com");
+  assert.equal(normalizeNickname("  满减 观察员  "), "满减 观察员");
+  assert.equal(normalizeNickname("0123456789012345678901234").length, 24);
+  assert.equal(isValidEmail("fantong@example.com"), true);
+  assert.equal(isValidEmail("not-an-email"), false);
+  assert.equal(isValidOtp("123456"), true);
+  assert.equal(isValidOtp(""), false);
+  assert.equal(isValidOtp("12345a"), false);
+  assert.equal(record.email, "fantong@example.com");
+  assert.equal(record.nickname, "满减 观察员");
+  assert.equal(record.type_id, type.id);
+  assert.equal(record.type_code, type.code);
+  assert.equal(record.share_line, type.shareLine);
+  assert.deepEqual(record.metrics, type.metrics);
+  assert.equal(record.answers.length, 2);
+
+  for (const value of Object.values(record)) {
+    if (typeof value === "string") assert.ok(value.trim());
+  }
 });

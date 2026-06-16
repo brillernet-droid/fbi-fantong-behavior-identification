@@ -1,11 +1,25 @@
 import { meals, questions, types } from "./data.js";
+import {
+  buildArchiveRecord,
+  createArchiveClient,
+  getArchiveConfig,
+  isArchiveConfigured,
+  isValidEmail,
+  isValidOtp,
+  normalizeEmail,
+  normalizeNickname
+} from "./auth.js";
+import { FANTONG_CONFIG } from "./config.js";
 import { METRIC_LABELS, buildLeaderboard, buildPosterPayload, buildReportFields, pickTypeFromAnswers } from "./logic.js";
 
 const appState = {
   index: 0,
   answers: [],
+  currentType: null,
   currentPosterPayload: null,
-  currentPosterUrl: null
+  currentPosterUrl: null,
+  archiveClientPromise: null,
+  archiveCooldownTimer: null
 };
 
 const PROGRESS_LABELS = [
@@ -29,6 +43,7 @@ const decideMeal = document.querySelector("#decideMeal");
 const mealFromResult = document.querySelector("#mealFromResult");
 const restartBtn = document.querySelector("#restartBtn");
 const posterBtn = document.querySelector("#posterBtn");
+const saveArchiveBtn = document.querySelector("#saveArchiveBtn");
 const cancelQuiz = document.querySelector("#cancelQuiz");
 const backBtn = document.querySelector("#backBtn");
 const subjectName = document.querySelector("#subjectName");
@@ -49,6 +64,16 @@ const mealDialog = document.querySelector("#mealDialog");
 const mealTitle = document.querySelector("#mealTitle");
 const mealResult = document.querySelector("#mealResult");
 const rerollMeal = document.querySelector("#rerollMeal");
+const archiveDialog = document.querySelector("#archiveDialog");
+const archiveForm = document.querySelector("#archiveForm");
+const archiveNickname = document.querySelector("#archiveNickname");
+const archiveEmail = document.querySelector("#archiveEmail");
+const archiveOtp = document.querySelector("#archiveOtp");
+const archiveConsent = document.querySelector("#archiveConsent");
+const sendArchiveCode = document.querySelector("#sendArchiveCode");
+const verifyArchiveBtn = document.querySelector("#verifyArchiveBtn");
+const archiveStatus = document.querySelector("#archiveStatus");
+const archiveSuccess = document.querySelector("#archiveSuccess");
 
 function setScreen(screen) {
   home.hidden = screen !== "home";
@@ -68,6 +93,8 @@ function setScreen(screen) {
 function startQuiz() {
   appState.index = 0;
   appState.answers = [];
+  appState.currentType = null;
+  appState.currentPosterPayload = null;
   sampleStatus.textContent = "饭点信号采集中，疑似早八/加班/夜宵样本";
   setScreen("quiz");
   renderQuestion();
@@ -144,10 +171,162 @@ function showPosterPreview(blob, filename) {
   return url;
 }
 
+function setArchiveStatus(message, tone = "neutral") {
+  archiveStatus.textContent = message;
+  archiveStatus.dataset.tone = tone;
+}
+
+function resetArchiveSuccess() {
+  archiveSuccess.hidden = true;
+  archiveSuccess.textContent = "";
+}
+
+function getArchiveService() {
+  const config = getArchiveConfig(FANTONG_CONFIG);
+  if (!isArchiveConfigured(config)) {
+    throw new Error("档案服务还没配置。请先在 config.js 填入 Supabase URL 和 anon public key。");
+  }
+
+  if (!appState.archiveClientPromise) {
+    appState.archiveClientPromise = createArchiveClient(config);
+  }
+
+  return appState.archiveClientPromise;
+}
+
+function startArchiveCooldown(seconds = 60) {
+  let remaining = seconds;
+  sendArchiveCode.disabled = true;
+  sendArchiveCode.textContent = `${remaining}s 后重发`;
+
+  window.clearInterval(appState.archiveCooldownTimer);
+  appState.archiveCooldownTimer = window.setInterval(() => {
+    remaining -= 1;
+    if (remaining <= 0) {
+      window.clearInterval(appState.archiveCooldownTimer);
+      sendArchiveCode.disabled = false;
+      sendArchiveCode.textContent = "发送验证码";
+      return;
+    }
+
+    sendArchiveCode.textContent = `${remaining}s 后重发`;
+  }, 1000);
+}
+
+function validateArchiveContact({ requireOtp = false } = {}) {
+  const email = normalizeEmail(archiveEmail.value);
+  const token = archiveOtp.value.trim();
+
+  if (!archiveConsent.checked) {
+    setArchiveStatus("请先同意保存邮箱和本次测试结果，研究所不能偷偷建档。", "error");
+    return null;
+  }
+
+  if (!isValidEmail(email)) {
+    setArchiveStatus("邮箱格式看起来不太像邮箱，研究所收不到验证码。", "error");
+    archiveEmail.focus();
+    return null;
+  }
+
+  if (requireOtp && !isValidOtp(token)) {
+    setArchiveStatus("请输入邮件里的 6 位数字验证码。", "error");
+    archiveOtp.focus();
+    return null;
+  }
+
+  return { email, token };
+}
+
+function openArchiveDialog() {
+  resetArchiveSuccess();
+  const subject = appState.currentPosterPayload?.subject || subjectName.value.trim() || "未署名饭桶";
+  archiveNickname.value = normalizeNickname(archiveNickname.value || subject);
+  archiveOtp.value = "";
+
+  const config = getArchiveConfig(FANTONG_CONFIG);
+  if (isArchiveConfigured(config)) {
+    setArchiveStatus("输入邮箱后发送验证码，验证成功即可把本次报告入库。");
+  } else {
+    setArchiveStatus("档案服务还没配置：请先在 config.js 填入 Supabase URL 和 anon public key。", "error");
+  }
+
+  if (typeof archiveDialog.showModal === "function") {
+    archiveDialog.showModal();
+    return;
+  }
+
+  archiveDialog.setAttribute("open", "");
+}
+
+async function sendArchiveOtp() {
+  resetArchiveSuccess();
+  const contact = validateArchiveContact();
+  if (!contact) return;
+
+  sendArchiveCode.disabled = true;
+  setArchiveStatus("验证码发送中，研究所正在把邮件塞进传送带。");
+
+  try {
+    const service = await getArchiveService();
+    const { error } = await service.sendOtp(contact.email);
+    if (error) throw error;
+    setArchiveStatus("验证码已发送，请查看邮箱。若没收到，可以 60 秒后再试。", "success");
+    startArchiveCooldown();
+  } catch (error) {
+    sendArchiveCode.disabled = false;
+    sendArchiveCode.textContent = "发送验证码";
+    setArchiveStatus(error.message || "验证码发送失败，请稍后再试。", "error");
+  }
+}
+
+async function verifyAndSaveArchive() {
+  resetArchiveSuccess();
+  if (!appState.currentType || !appState.currentPosterPayload) {
+    setArchiveStatus("请先完成一次 FBI 饭桶行为识别，再保存档案。", "error");
+    return;
+  }
+
+  const contact = validateArchiveContact({ requireOtp: true });
+  if (!contact) return;
+
+  verifyArchiveBtn.disabled = true;
+  setArchiveStatus("验证码核验中，饭桶研究所正在给档案盖饭。");
+
+  try {
+    const service = await getArchiveService();
+    const { data, error } = await service.verifyOtp(contact.email, contact.token);
+    if (error) throw error;
+
+    const user = data?.user || data?.session?.user;
+    if (!user?.id) throw new Error("验证码通过了，但没有拿到研究员编号，请重试。");
+
+    const record = buildArchiveRecord({
+      userId: user.id,
+      email: contact.email,
+      nickname: archiveNickname.value,
+      subject: appState.currentPosterPayload.subject,
+      type: appState.currentType,
+      answers: appState.answers
+    });
+    const { data: savedArchive, error: saveError } = await service.saveArchive(record);
+    if (saveError) throw saveError;
+
+    const shortId = String(savedArchive?.id || user.id).slice(0, 8).toUpperCase();
+    setArchiveStatus("档案已入库。", "success");
+    archiveSuccess.hidden = false;
+    archiveSuccess.textContent = `研究员编号：FT-${shortId}。你的 ${record.type_code} / ${record.type_name} 已被饭桶研究所收录。`;
+  } catch (error) {
+    setArchiveStatus(error.message || "档案保存失败，请检查验证码或稍后再试。", "error");
+  } finally {
+    verifyArchiveBtn.disabled = false;
+  }
+}
+
 function renderReport() {
   const type = pickType();
   const subject = subjectName.value.trim() || "未署名饭桶";
   const fields = buildReportFields(type, subject);
+  appState.currentType = type;
   appState.currentPosterPayload = buildPosterPayload(type, subject);
   posterStatus.textContent = "";
   clearPosterPreview();
@@ -428,6 +607,13 @@ decideMeal.addEventListener("click", openMealDialog);
 mealFromResult.addEventListener("click", openMealDialog);
 rerollMeal.addEventListener("click", pickMeal);
 restartBtn.addEventListener("click", startQuiz);
+saveArchiveBtn.addEventListener("click", openArchiveDialog);
+sendArchiveCode.addEventListener("click", sendArchiveOtp);
+verifyArchiveBtn.addEventListener("click", verifyAndSaveArchive);
+archiveForm.addEventListener("submit", (event) => {
+  if (event.submitter?.value === "close") return;
+  event.preventDefault();
+});
 posterBtn.addEventListener("click", () => {
   generatePoster().catch(() => {
     posterStatus.textContent = "海报生成失败，请再点一次。";

@@ -33,6 +33,7 @@
 - 内置 `FBI 饭桶行为 16 型档案`
 - 随机“今天吃啥”推荐弹窗
 - 结果页生成可预览、长按保存、可分享/下载的报告海报
+- 结果页可通过 Supabase 邮箱验证码保存饭桶档案
 - 三个本土饭点维度：干饭冲动值、满减敏感度、饭局社交值
 - 饭桶类型热度榜和结果传播金句
 - 桌面端与移动端响应式适配
@@ -72,8 +73,10 @@ http://127.0.0.1:4173/
 ├── index.html
 ├── logic.js
 ├── marketing/
+├── supabase/
 ├── styles.css
 ├── tests/
+├── SUPABASE_SETUP.md
 ├── LICENSE
 ├── package.json
 └── README.md
@@ -105,6 +108,16 @@ npm run check
 ```bash
 npm start
 ```
+
+配置邮箱验证码档案：
+
+```text
+config.js
+supabase/schema.sql
+SUPABASE_SETUP.md
+```
+
+只允许填写 Supabase `anon public` key，不要提交 `service_role` 或任何私密 key。
 
 ## GitHub Pages
 
