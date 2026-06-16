@@ -58,6 +58,8 @@ export const FANTONG_CONFIG = {
 5 分钟内输入有效。若不是你本人操作，可以忽略这封邮件。
 ```
 
+仓库里也提供了一份可直接复制的模板：[supabase/email-otp-template.html](./supabase/email-otp-template.html)。
+
 ## 4. Redirect URL
 
 进入 `Authentication -> URL Configuration`，把 GitHub Pages 地址加入允许列表：
@@ -82,3 +84,18 @@ http://127.0.0.1:4173/
 - 配置自己的 SMTP，提高送达率和可控性。
 - 流量变大后接入 CAPTCHA，例如 Cloudflare Turnstile。
 - 定期查看 Supabase Auth 邮件发送量，避免被恶意刷爆免费额度。
+
+## 6. 上线前自检
+
+配置完 `config.js` 后运行：
+
+```bash
+npm run verify:supabase
+```
+
+这个命令会检查：
+
+- Supabase URL 是否像真实项目地址。
+- 是否填写了 anon public key。
+- 是否仍使用 `fantong_archives` 表名。
+- SQL 里是否包含只允许用户插入/读取自己档案的 RLS policy。

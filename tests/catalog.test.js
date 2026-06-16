@@ -162,6 +162,7 @@ test("archive config defaults to disabled without private keys", async () => {
     archiveTable: "custom_archives"
   });
   const configSource = await readFile(new URL("../config.js", import.meta.url), "utf8");
+  const emailTemplate = await readFile(new URL("../supabase/email-otp-template.html", import.meta.url), "utf8");
 
   assert.equal(isArchiveConfigured(config), false);
   assert.equal(isArchiveConfigured(configured), true);
@@ -169,6 +170,8 @@ test("archive config defaults to disabled without private keys", async () => {
   assert.equal(configured.archiveTable, "custom_archives");
   assert.equal(configSource.includes("service_role"), false);
   assert.equal(configSource.includes("sb_secret"), false);
+  assert.equal(emailTemplate.includes("{{ .Token }}"), true);
+  assert.equal(emailTemplate.includes("ConfirmationURL"), false);
 });
 
 test("archive helpers validate email otp and payload", () => {

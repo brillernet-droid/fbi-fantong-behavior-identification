@@ -119,6 +119,14 @@ SUPABASE_SETUP.md
 
 只允许填写 Supabase `anon public` key，不要提交 `service_role` 或任何私密 key。
 
+配置完成后自检：
+
+```bash
+npm run verify:supabase
+```
+
+小范围灰测说明见 [GRAY_TEST.md](./GRAY_TEST.md)。
+
 ## GitHub Pages
 
 这个项目是纯静态应用，可以直接部署到 GitHub Pages：
