@@ -284,6 +284,21 @@ test("archive config defaults to disabled without private keys", async () => {
   assert.equal(emailTemplate.includes("ConfirmationURL"), false);
 });
 
+test("public launch copy and archive gate stay ready", async () => {
+  const indexSource = await readFile(new URL("../index.html", import.meta.url), "utf8");
+  const appSource = await readFile(new URL("../app.js", import.meta.url), "utf8");
+  const marketingSource = await readFile(new URL("../marketing/viral-kit.md", import.meta.url), "utf8");
+
+  assert.ok(indexSource.includes("不是 MBTI，是你的饭点人格测试"));
+  assert.ok(indexSource.includes("测测你是哪种饭桶行为类型"));
+  assert.ok(indexSource.includes('id="shareTestBtn"'));
+  assert.ok(indexSource.includes("研究所动态生成"));
+  assert.ok(marketingSource.includes("不是 MBTI，是你的饭点行为识别报告。"));
+  assert.ok(appSource.includes("saveArchiveBtn.hidden = !ready"));
+  assert.ok(appSource.includes("测试链接已复制，可以发给朋友一起测。"));
+  assert.equal(indexSource.includes("程序动态生成"), false);
+});
+
 test("archive helpers validate email otp and payload", () => {
   const type = types.find((item) => item.id === "budget");
   const record = buildArchiveRecord({

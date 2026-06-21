@@ -3,26 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>饭桶研究所 | 饭点行为识别与吃啥决策系统</title>
+    <title>饭桶研究所 | 不是 MBTI，是你的饭点人格测试</title>
     <meta
       name="description"
-      content="饭桶研究所出品的 FBI 饭桶行为识别系统和饭点决策系统，识别早八、满减、夜宵和选择困难，并直接决定今天吃啥。"
+      content="不是 MBTI，是你的饭点行为识别报告。测测你是哪种饭桶行为类型，生成研究所内参式报告和饭点海报。"
     />
     <meta name="theme-color" content="#d94d32" />
     <link rel="canonical" href="https://brillernet-droid.github.io/fbi-fantong-behavior-identification/" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://brillernet-droid.github.io/fbi-fantong-behavior-identification/" />
-    <meta property="og:title" content="饭桶研究所 | FBI 饭桶行为识别系统" />
+    <meta property="og:title" content="饭桶研究所 | 不是 MBTI，是你的饭点人格测试" />
     <meta
       property="og:description"
-      content="测测你是哪种饭桶行为类型，也让饭桶研究所直接帮你决定今天吃啥。"
+      content="测测你是哪种饭桶行为类型，生成一份荒诞但很像你的饭点行为识别报告。"
     />
     <meta
       property="og:image"
       content="https://brillernet-droid.github.io/fbi-fantong-behavior-identification/assets/fantong-lab-hero.png"
     />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=launch-public-1" />
   </head>
   <body>
     <div class="app-shell">
@@ -53,9 +53,9 @@
           <div class="hero-overlay" aria-hidden="true"></div>
           <div class="hero-content">
             <p class="eyebrow">饭桶研究所 · 中国饭点样本组</p>
-            <h1>FBI 饭桶行为识别系统</h1>
+            <h1>测测你是哪种饭桶行为类型</h1>
             <p class="hero-copy">
-              先识别你是哪种饭桶，再把今天吃啥拍板。从早八豆浆到下班外卖，FBI = FanTong Behavior Identification。
+              不是 MBTI，是你的饭点行为识别报告。测完生成研究所内参式报告、一键报告海报，顺手决定今天吃啥。
             </p>
             <div class="hero-actions" aria-label="首页操作">
               <button class="btn btn-primary" id="startTest" type="button">启动 FBI 识别</button>
@@ -135,7 +135,7 @@
                   <p class="eyebrow">FanTong Behavior Identification</p>
                   <h2 id="reportTitle">【FBI 饭桶行为识别报告】</h2>
                 </div>
-                <span class="report-stamp" id="reportStamp">程序动态生成</span>
+                <span class="report-stamp" id="reportStamp">研究所动态生成</span>
               </div>
 
               <div class="metrics-panel" id="metricsPanel" aria-label="饭桶行为维度"></div>
@@ -145,6 +145,7 @@
 
             <div class="result-actions">
               <button class="btn btn-primary" id="posterBtn" type="button">生成报告海报</button>
+              <button class="btn btn-secondary" id="shareTestBtn" type="button">发给朋友测测</button>
               <button class="btn btn-secondary" id="saveArchiveBtn" type="button">保存我的饭桶档案</button>
               <button class="btn btn-secondary" id="mealFromResult" type="button">直接决定今晚吃啥</button>
               <button class="btn btn-light" id="restartBtn" type="button">再测一次</button>

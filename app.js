@@ -60,6 +60,7 @@ const homeMealSummary = document.querySelector("#homeMealSummary");
 const mealFromResult = document.querySelector("#mealFromResult");
 const restartBtn = document.querySelector("#restartBtn");
 const posterBtn = document.querySelector("#posterBtn");
+const shareTestBtn = document.querySelector("#shareTestBtn");
 const saveArchiveBtn = document.querySelector("#saveArchiveBtn");
 const cancelQuiz = document.querySelector("#cancelQuiz");
 const backBtn = document.querySelector("#backBtn");
@@ -217,6 +218,17 @@ function getArchiveService() {
   return appState.archiveClientPromise;
 }
 
+function isArchiveReady() {
+  return isArchiveConfigured(getArchiveConfig(FANTONG_CONFIG));
+}
+
+function renderArchiveAvailability() {
+  const ready = isArchiveReady();
+  saveArchiveBtn.hidden = !ready;
+  saveArchiveBtn.disabled = !ready;
+  saveArchiveBtn.setAttribute("aria-hidden", String(!ready));
+}
+
 function startArchiveCooldown(seconds = 60) {
   let remaining = seconds;
   sendArchiveCode.disabled = true;
@@ -261,6 +273,11 @@ function validateArchiveContact({ requireOtp = false } = {}) {
 }
 
 function openArchiveDialog() {
+  if (!isArchiveReady()) {
+    posterStatus.textContent = "饭桶档案库正在接入邮箱验证码，公开首发先测报告和海报。";
+    return;
+  }
+
   resetArchiveSuccess();
   const subject = appState.currentPosterPayload?.subject || subjectName.value.trim() || "未署名饭桶";
   archiveNickname.value = normalizeNickname(archiveNickname.value || subject);
@@ -367,7 +384,7 @@ async function renderReport() {
       ? "API 动态生成"
       : reportContent.source === "api-fallback"
         ? "API 回落生成"
-        : "程序动态生成";
+        : "研究所动态生成";
   posterStatus.textContent = "";
   clearPosterPreview();
   renderMetrics(type.metrics);
@@ -588,6 +605,42 @@ async function generatePoster() {
   }
 }
 
+function getShareUrl() {
+  return document.querySelector('link[rel="canonical"]')?.href || `${window.location.origin}${window.location.pathname}`;
+}
+
+async function writeTextToClipboard(text) {
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
+    await navigator.clipboard.writeText(text);
+  } catch {
+    copyTextWithFallback(text);
+  }
+}
+
+async function shareTest() {
+  const url = getShareUrl();
+  const typeName = appState.currentType?.name || "饭桶行为类型";
+  const text = `我测出了「${typeName}」。不是 MBTI，是饭点行为识别报告。你也测一下：${url}`;
+
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: "饭桶研究所",
+        text,
+        url
+      });
+      posterStatus.textContent = "测试链接已交给系统分享。";
+      return;
+    }
+
+    await writeTextToClipboard(text);
+    posterStatus.textContent = "测试链接已复制，可以发给朋友一起测。";
+  } catch {
+    posterStatus.textContent = "复制失败，可以直接复制浏览器地址发给朋友。";
+  }
+}
+
 function renderArchive() {
   typeGrid.replaceChildren(
     ...types.map((type) => {
@@ -687,12 +740,7 @@ async function copyMealDecision() {
   const text = `${decision.command}\n${decision.reason}\n慎选提醒：${decision.caution}\n生成自：饭桶研究所`;
 
   try {
-    try {
-      if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
-      await navigator.clipboard.writeText(text);
-    } catch {
-      copyTextWithFallback(text);
-    }
+    await writeTextToClipboard(text);
     copyMeal.textContent = "已复制";
   } catch {
     copyMeal.textContent = "长按复制";
@@ -724,6 +772,11 @@ rerollMeal.addEventListener("click", () => pickMeal(appState.currentMealModeId))
 copyMeal.addEventListener("click", copyMealDecision);
 restartBtn.addEventListener("click", startQuiz);
 saveArchiveBtn.addEventListener("click", openArchiveDialog);
+shareTestBtn.addEventListener("click", () => {
+  shareTest().catch(() => {
+    posterStatus.textContent = "分享失败，可以直接复制浏览器地址发给朋友。";
+  });
+});
 sendArchiveCode.addEventListener("click", sendArchiveOtp);
 verifyArchiveBtn.addEventListener("click", verifyAndSaveArchive);
 archiveForm.addEventListener("submit", (event) => {
@@ -739,5 +792,6 @@ cancelQuiz.addEventListener("click", () => setScreen("home"));
 backBtn.addEventListener("click", goBack);
 
 renderArchive();
+renderArchiveAvailability();
 renderLeaderboard();
 renderMealModes();
